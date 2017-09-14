@@ -31,8 +31,10 @@
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">					
-						<li><a href="#">Inicio</a></li>
-						<li><a href="#">Proyecto</a></li>
+						<li><a href="inicio.html">Inicio</a></li>
+						<c:if test="${usuario.getRango()==0}">
+							<li><a href="proyecto.html">Proyecto</a></li>
+						</c:if>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cuentas<span class="caret"></span></a>
 							<ul class="dropdown-menu">
@@ -66,20 +68,22 @@
 				<h1>Bienvenido, <c:out value="${usuario.username}"/>.</h1>
 				<p>Seleccione alguna opción desde el menu o desde aquí mismo para comenzar a trabajar.</p>
 			</div>
-
-			<div id="column">
-				<a class="col" href="#">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Proyecto</h3>
+			
+			<c:if test="${usuario.getRango()==0}">	
+				<div id="column">
+					<a class="col" href="proyecto.html">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">Proyecto</h3>
+							</div>
+							<div class="panel-body">
+								<center><img src="resources/images/proyecto.png" class="img-circle"></center>
+								<p class="info">Edite el proyecto cargando un archivo ".csv" con los datos para poder comenzar a trabajar.</p>
+							</div>
 						</div>
-						<div class="panel-body">
-							<center><img src="resources/images/proyecto.png" class="img-circle"></center>
-							<p class="info">Edite el proyecto cargando un archivo ".csv" con los datos para poder comenzar a trabajar.</p>
-						</div>
-					</div>
-				</a>
-			</div>
+					</a>
+				</div>
+			</c:if>
 			<div id="column">
 				<a class="col" href="#">
 					<div class="panel panel-default">

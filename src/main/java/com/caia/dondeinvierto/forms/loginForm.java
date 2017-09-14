@@ -1,6 +1,16 @@
 package com.caia.dondeinvierto.forms;
 
+import java.lang.reflect.InvocationTargetException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
+
+import com.caia.dondeinvierto.models.Usuario;
+
+//import iceblock.IBlock;
+//import iceblock.connection.ConnectionManager;
 
 public class loginForm {
 	
@@ -32,8 +42,8 @@ public class loginForm {
 	
 	public boolean ilegalChars(){
 		
-		Boolean match1 = Pattern.matches("[a-zA-Z1-9]+", username);
-		Boolean match2 = Pattern.matches("[a-zA-Z1-9]+", password);
+		Boolean match1 = Pattern.matches("[a-zA-Z0-9]+", username);
+		Boolean match2 = Pattern.matches("[a-zA-Z0-9]+", password);
 		
 		if(!match1 || !match2){
 			return true;
@@ -43,8 +53,24 @@ public class loginForm {
 		
 	}
 	
-	public boolean existeUsuario(){
-		return true;
+	public List<Usuario> buscaUsuario() throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, SQLException{
+		
+		//Connection conn = ConnectionManager.getConnection();
+		
+		String xql = "usuario.username = " + this.username + " && usuario.password = " + this.password;
+		
+		//List<Usuario> p = IBlock.select(conn, Usuario.class, xql);
+		
+		Usuario user = new Usuario();
+		user.setUsername("pepito");
+		user.setPassword("asd");
+		user.setRango(0);
+		
+		List<Usuario> listaUsuarios = new ArrayList<Usuario>();
+		listaUsuarios.add(user);
+		
+		return listaUsuarios;
+	
 	}
 	
 }
