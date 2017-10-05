@@ -8,9 +8,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import com.caia.dondeinvierto.models.Usuario;
-
-//import iceblock.IBlock;
-//import iceblock.connection.ConnectionManager;
+import iceblock.IBlock;
+import iceblock.connection.ConnectionManager;
 
 public class loginForm {
 	
@@ -54,20 +53,12 @@ public class loginForm {
 	}
 	
 	public List<Usuario> buscaUsuario() throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, SQLException{
+	
+		Connection conn = ConnectionManager.getConnection();
 		
-		//Connection conn = ConnectionManager.getConnection();
+		String xql = "usuario.username = '" + this.username + "' AND usuario.password = '" + this.password + "'";
 		
-		String xql = "usuario.username = " + this.username + " && usuario.password = " + this.password;
-		
-		//List<Usuario> p = IBlock.select(conn, Usuario.class, xql);
-		
-		Usuario user = new Usuario();
-		user.setUsername("pepito");
-		user.setPassword("asd");
-		user.setRango(0);
-		
-		List<Usuario> listaUsuarios = new ArrayList<Usuario>();
-		listaUsuarios.add(user);
+		List<Usuario> listaUsuarios = IBlock.select(conn, Usuario.class, xql);
 		
 		return listaUsuarios;
 	

@@ -20,20 +20,20 @@ import com.caia.dondeinvierto.auxiliar.ParserCSV;
 import com.caia.dondeinvierto.forms.loginForm;
 import com.caia.dondeinvierto.models.Usuario;
 
-//import iceblock.connection.ConnectionManager;
+import iceblock.connection.ConnectionManager;
 
 @Controller
 public class MiController {
 	
-	//Connection conn = null;
+	Connection conn = null;
 	
-	/*public MiController() throws SQLException{
-		
+	public MiController() throws SQLException, ClassNotFoundException{
+			
 		ConnectionManager.create("org.hsqldb.jdbcDriver","jdbc:hsqldb:hsql://localhost/","SA","","hsqldb");
 		ConnectionManager.changeConnection("hsqldb");
 		this.conn = ConnectionManager.getConnection();
 		
-	}*/
+	}
 	
 	// Redirige a formulario login
 	@RequestMapping("init")
@@ -196,9 +196,7 @@ public class MiController {
 	public ModelAndView generarProyecto(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
 		
 		ModelAndView model = new ModelAndView();
-		
-		System.out.println(file.getContentType());
-				
+						
 		if(!file.isEmpty()){
 			
 			if(file.getOriginalFilename().contains(".csv")){
@@ -264,4 +262,20 @@ public class MiController {
 		return model;
 		
 	}
+	
+	// Logout
+	@RequestMapping(value="logout", method= RequestMethod.GET)
+	public ModelAndView logout(HttpSession session){
+		
+		session.invalidate();
+		
+		ModelAndView model = new ModelAndView();
+		
+		model.setViewName("login");
+		model.addObject("command",new loginForm());	
+		
+		return model;
+		
+	}
+	
 }

@@ -55,6 +55,7 @@
 								<li><a href="#">Gestión metodologías</a></li>
 							</ul>
 						</li>
+						<li><a href="logout.html">Cerrar sesión</a></li>
 					</ul>
 				</div>
 			</div>
