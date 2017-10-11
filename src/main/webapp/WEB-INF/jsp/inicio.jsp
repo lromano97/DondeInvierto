@@ -9,7 +9,7 @@
 		<meta name="description" content="">
 		<meta name="author" content="">
 		<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-		<link href="resources/css/web/styles.css" rel="stylesheet">
+		<link href="resources/css/web.css" rel="stylesheet">
 		<title>Inicio - dondeInvierto</title>
 	</head>
 
@@ -70,61 +70,60 @@
 				<p>Seleccione alguna opción desde el menu o desde aquí mismo para comenzar a trabajar.</p>
 			</div>
 			
-			<c:if test="${usuario.getRango()==0}">	
-				<div id="column">
-					<a class="col" href="proyecto.html">
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<h3 class="panel-title">Proyecto</h3>
+			<c:if test="${usuario.getRango()==0}">
+				<div class="col-sm-4">
+						<a class="col" href="proyecto.html">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h3 class="panel-title">Proyecto</h3>
+								</div>
+								<div class="panel-body">
+									<center><img src="resources/images/proyecto.png" class="img-responsive"></center>
+									<p class="info">Edite el proyecto cargando un archivo ".csv" con los datos para poder comenzar a trabajar.</p>
+								</div>
 							</div>
-							<div class="panel-body">
-								<center><img src="resources/images/proyecto.png" class="img-circle"></center>
-								<p class="info">Edite el proyecto cargando un archivo ".csv" con los datos para poder comenzar a trabajar.</p>
-							</div>
-						</div>
-					</a>
+						</a>
 				</div>
 			</c:if>
-			<div id="column">
+			<div class="col-sm-4">
 				<a class="col" href="#">
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h3 class="panel-title">Cuentas</h3>
 						</div>
 						<div class="panel-body">
-							<center><img src="resources/images/consultas.png" class="img-circle"></center>
+							<center><img src="resources/images/consultas.png" class="img-responsive"></center>
 							<p class="info">Haga consultas específicas usando filtros para ver los valores de las distintas cuentas cargadas.</p>
 						</div>
 					</div>
 				</a>
 			</div>
-			<div id="column">
+			<div class="col-sm-4">
 				<a class="col" href="#">
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h3 class="panel-title">Indicadores</h3>
 						</div>
 						<div class="panel-body">
-							<center><img src="resources/images/indicadores.png" class="img-circle"></center>
+							<center><img src="resources/images/indicadores.png" class="img-responsive"></center>
 							<p class="info">Gestione los indicadores económicos.</p>
 						</div>
 					</div>
 				</a>
 			</div>
-			<div id="column">
+			<div class="col-sm-4">
 				<a class="col" href="#">
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h3 class="panel-title">Metodologías</h3>
 						</div>
 						<div class="panel-body">
-							<center><img src="resources/images/metodologias.png" class="img-circle"></center>
+							<center><img src="resources/images/metodologias.png" class="img-responsive"></center>
 							<p class="info">Gestione las metodologías.</p>
 						</div>
 					</div>
 				</a>
 			</div>
-
 			<!-- Tabla datos 
 			<div class="page-header" style="clear:both; padding-top:20px;">
 				<h1>Tabla de Datos</h1>

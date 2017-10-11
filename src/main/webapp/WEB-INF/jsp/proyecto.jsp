@@ -9,7 +9,7 @@
 		<meta name="description" content="">
 		<meta name="author" content="">
 		<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-		<link href="resources/css/web/styles.css" rel="stylesheet">
+		<link href="resources/css/web.css" rel="stylesheet">
 		<title>Inicio - dondeInvierto</title>
 	</head>
 
@@ -62,7 +62,45 @@
 
 		<!-- Container -->
 		<div class="container theme-showcase" role="main">
-
+			
+			<c:choose>
+			    <c:when test="${msg == 0}">
+			    	<div class="alert alert-success" role="alert">
+						<strong>Bien hecho!</strong> El archivo se ha cargado correctamente, ya puede empezar a trabajar.
+					</div>
+			    </c:when>
+			    <c:when test="${msg == 1}">
+			    	<div class="alert alert-danger" role="alert">
+						<strong>Error!</strong> El campo o el archivo se encuentra vacio. Intentelo nuevamente.
+					</div>
+			    </c:when>
+			    <c:when test="${msg == 2}">
+			    	<div class="alert alert-danger" role="alert">
+						<strong>Error!</strong> El archivo no es un ".csv", por favor vuelva a intentarlo usando un archivo con este formato.
+					</div>
+			    </c:when>
+			    <c:when test="${msg == 3}">
+			    	<div class="alert alert-danger" role="alert">
+						<strong>Error!</strong> I/O Exception por favor contacte con algún administrador de la web.
+					</div>
+			    </c:when>
+			    <c:when test="${msg == 4}">
+			    	<div class="alert alert-danger" role="alert">
+						<strong>Error!</strong> El archivo .csv se encuentra vacio. Intentelo nuevamente con uno que se encuentre completo.
+					</div>
+			    </c:when>
+			    <c:when test="${msg == 5}">
+			    	<div class="alert alert-danger" role="alert">
+						<strong>Error!</strong> El archivo .csv se encuentra incompleto (inconsistencias en la cantidad de columnas). Por favor completelo e intente nuevamente.
+					</div>
+			    </c:when>
+			    <c:when test="${msg == 6}">
+			    	<div class="alert alert-danger" role="alert">
+						<strong>Error!</strong> Las columnas no concuerdan con el formato acordado. Favor de modificarlas e intentarlo nuevamente.
+					</div>
+			    </c:when>
+			</c:choose>
+			
 			<!-- DivInfo -->
 			<div class="jumbotron">
 				<h1>Cargar Proyecto.</h1>

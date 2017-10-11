@@ -59,6 +59,29 @@ public class MiController {
 		
 	}
 	
+	// Error 404
+	@RequestMapping(value="/404")
+	public ModelAndView error404(HttpSession session){
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("error404");
+		
+		return model;
+		
+	}
+	
+	// Error 500
+	@RequestMapping(value="/500")
+	public ModelAndView error500(HttpSession session){
+			
+		ModelAndView model = new ModelAndView();
+		model.setViewName("error500");
+			
+		return model;
+			
+	}
+		
+		
 	// Ir a login
 	@RequestMapping(value="login", method={RequestMethod.GET})
 	public ModelAndView irALogin(HttpSession session){
@@ -199,7 +222,11 @@ public class MiController {
 						
 		if(!file.isEmpty()){
 			
-			if(file.getOriginalFilename().contains(".csv")){
+			String nombreArchivo = file.getOriginalFilename();
+			String extension = nombreArchivo.substring(nombreArchivo.length()-4, nombreArchivo.length());
+			extension = extension.toLowerCase();
+			
+			if(extension.equals(".csv")){
 				
 				try {
 					
@@ -209,56 +236,43 @@ public class MiController {
 					
 						if(parser.csvCompleto()){
 							
-							if(parser.checkType()){
+							if(parser.checkColumnTypes()){
 								
-								System.out.println("Todo piola");
-								model.setViewName("proyecto");
 								model.addObject("msg", 0);
 								
-							// Error de tipos
+							// Error de tipos en columnas
 							} else {
 								
-								System.out.println("Todo mal");
-								model.setViewName("proyecto");
 								model.addObject("msg", 6);
 								
 							}
 						
-						// Error CSV incompleto
+						// Error Columnas CSV incompletas
 						} else {
-							System.out.println("CSV incompleto");
-							model.setViewName("proyecto");
 							model.addObject("msg", 5);
 						}
 					
 					// Error CSV vacio
 					} else {
-						System.out.println("CSV vacio");
-						model.setViewName("proyecto");
 						model.addObject("msg", 4);
 					}
 				
 				// Error grave IO
 				} catch (IOException e) {
-					System.out.println("CSV IO");
-					model.setViewName("proyecto");
 					model.addObject("msg", 3);
 				}
 				
 			// No es un archivo CSV
 			} else {
-				System.out.println("No es CSV");
-				model.setViewName("proyecto");
 				model.addObject("msg", 2);
 			}
 			
-		// Campo vacio
+		// Campo/Archivo vacio
 		} else {
-			System.out.println("Campo vacio");
-			model.setViewName("proyecto");
 			model.addObject("msg", 1);
 		}
 		
+		model.setViewName("proyecto");
 		return model;
 		
 	}

@@ -17,14 +17,6 @@ body {
 	width: auto;
 }
 
-#column {
-	padding-left: 15px;
-	padding-right: 15px;
-	width: 33.33333333%;
-	display:block;
-	float:left;
-}
-
 a.col:link, a.col:hover, a.col:visited{
 	color: #337ab7;
 	text-decoration: none;

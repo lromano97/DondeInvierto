@@ -3,6 +3,7 @@ package com.caia.dondeinvierto.auxiliar;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.net.SyslogAppender;
 import org.springframework.web.multipart.MultipartFile;
 
 public class ParserCSV {
@@ -33,7 +34,7 @@ public class ParserCSV {
 		
 	}
 
-	public boolean checkType() {
+	public boolean checkColumnTypes() {
 		
 		boolean check = true;		
 		for(String fila : filasString){
@@ -66,8 +67,7 @@ public class ParserCSV {
 	}
 	
 	private boolean esValor(String x){
-		System.out.println(x);
-		return Pattern.matches("[0-9]+[.][0-9]+\n{0,1}\r{0,1}",x);
+		return Pattern.matches("[0-9]+[.][0-9]+(\n\r|\r|\n|\r\n)?",x);
 	}
 	
 }

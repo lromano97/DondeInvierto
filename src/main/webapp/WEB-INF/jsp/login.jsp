@@ -9,7 +9,7 @@
 		<meta name="description" content="">
 		<meta name="author" content="">
 		<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-		<link href="resources/css/login/styles.css" rel="stylesheet">
+		<link href="resources/css/login.css" rel="stylesheet">
 		<title>Login - dondeInvierto</title>
 	</head>
 	
