@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.caia.dondeinvierto.auxiliar.ParserCSV;
-import com.caia.dondeinvierto.forms.loginForm;
+import com.caia.dondeinvierto.forms.LoginForm;
 import com.caia.dondeinvierto.models.Usuario;
 
 import iceblock.connection.ConnectionManager;
@@ -44,7 +44,7 @@ public class MiController {
 		if(session.getAttribute("usuario") == null){
 			
 			model.setViewName("login");
-			model.addObject("command",new loginForm());	
+			model.addObject("command",new LoginForm());	
 			
 		} else {
 			
@@ -90,7 +90,7 @@ public class MiController {
 		
 		if(session.getAttribute("usuario") == null){
 			model.setViewName("login");
-			model.addObject("command",new loginForm());
+			model.addObject("command",new LoginForm());
 		} else {
 			
 			Usuario usuario = (Usuario) session.getAttribute("usuario");
@@ -105,7 +105,7 @@ public class MiController {
 
 	// Catchea post en login
 	@RequestMapping(value="login", method={RequestMethod.POST})
-	public ModelAndView autentificarLogin(loginForm login, ModelAndView model, HttpSession session) throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, SQLException{
+	public ModelAndView autentificarLogin(LoginForm login, ModelAndView model, HttpSession session) throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, SQLException{
 		
 		ModelAndView newModel = new ModelAndView();
 		
@@ -130,7 +130,7 @@ public class MiController {
 					
 					System.out.println("Usuario no existe");
 					newModel.setViewName("login");
-					newModel.addObject("command", new loginForm());
+					newModel.addObject("command", new LoginForm());
 						
 				}
 				
@@ -139,7 +139,7 @@ public class MiController {
 					
 				System.out.println("Caracteres ilegales");
 				newModel.setViewName("login");
-				newModel.addObject("command", new loginForm());
+				newModel.addObject("command", new LoginForm());
 					
 			}
 			
@@ -148,7 +148,7 @@ public class MiController {
 				
 			System.out.println("Campos vacios");
 			newModel.setViewName("login");
-			newModel.addObject("command", new loginForm());
+			newModel.addObject("command", new LoginForm());
 				
 		}
 		
@@ -165,7 +165,7 @@ public class MiController {
 		if(session.getAttribute("usuario") == null){
 			
 			model.setViewName("login");
-			model.addObject("command",new loginForm());
+			model.addObject("command",new LoginForm());
 			
 		} else {
 			
@@ -189,7 +189,7 @@ public class MiController {
 		if(session.getAttribute("usuario") == null){
 			
 			model.setViewName("login");
-			model.addObject("command",new loginForm());
+			model.addObject("command",new LoginForm());
 			
 		} else {
 			
@@ -286,7 +286,7 @@ public class MiController {
 		ModelAndView model = new ModelAndView();
 		
 		model.setViewName("login");
-		model.addObject("command",new loginForm());	
+		model.addObject("command",new LoginForm());	
 		
 		return model;
 		

@@ -11,7 +11,7 @@ import com.caia.dondeinvierto.models.Usuario;
 import iceblock.IBlock;
 import iceblock.connection.ConnectionManager;
 
-public class loginForm {
+public class LoginForm {
 	
 	private String username;
 	private String password;
