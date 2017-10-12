@@ -14,8 +14,11 @@ Scherer, Ivan 155-537.6<br />
 - [X] Parser CSV.
 - [ ] Subir CSV al server con status bar.
 - [ ] Carga de cuentas al iniciar sesion y actualizacion de estas.
+- [ ] Consulta de cuentas
 - [X] Error 404/500/505.
 - [ ] Consulta de estado de las cuentas.
 - [ ] Gestion de indicadores.
 - [ ] Consulta de indicadores.
-- [X] Parser de indicadores.  
+- [X] Parser de indicadores.
+- [ ] Salvar/Restaurar datos de formularios.
+- [ ] Ayuda al usuario.

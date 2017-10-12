@@ -3,14 +3,6 @@ package com.caia.dondeinvierto.auxiliar;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-/*
-Ejemplo de uso:
-
-Parser par = new Parser("");
-System.out.println(par.analizar());
-
-*/
-
 public class ParserIndicador {
 	
 	int estado = 0;
@@ -20,12 +12,12 @@ public class ParserIndicador {
 	ArrayList<String> tokens = new ArrayList<String>();
 	
 	int [][] matriz = {
-			{0,STATE_ERROR,2,1,STATE_ERROR,3,STATE_ERROR},
-			{STATE_ERROR,1,STATE_ERROR,STATE_ERROR,0,0,STATE_FINAL},
-			{STATE_ERROR,2,STATE_ERROR,STATE_ERROR,0,0,STATE_FINAL},
-			{0,STATE_ERROR,4,5,STATE_ERROR,STATE_ERROR,STATE_ERROR},
-			{STATE_ERROR,4,STATE_ERROR,STATE_ERROR,0,0,STATE_FINAL},
-			{STATE_ERROR,5,STATE_ERROR,STATE_ERROR,0,0,STATE_FINAL},
+			{0,STATE_ERROR,2,1,STATE_ERROR,3,STATE_ERROR,STATE_ERROR},
+			{STATE_ERROR,1,STATE_ERROR,STATE_ERROR,0,0,STATE_FINAL,STATE_ERROR},
+			{STATE_ERROR,2,STATE_ERROR,STATE_ERROR,0,0,STATE_FINAL,STATE_ERROR},
+			{0,STATE_ERROR,4,5,STATE_ERROR,STATE_ERROR,STATE_ERROR,STATE_ERROR},
+			{STATE_ERROR,4,STATE_ERROR,STATE_ERROR,0,0,STATE_FINAL,STATE_ERROR},
+			{STATE_ERROR,5,STATE_ERROR,STATE_ERROR,0,0,STATE_FINAL,STATE_ERROR},
 		};
 	
 	public ParserIndicador(String formula) {
@@ -76,6 +68,10 @@ public class ParserIndicador {
 		}
 	}
 	
+	private boolean esEOL(String token){
+		return token.equals("");
+	}
+	
 	private boolean esChar(char primero) {
 		return Pattern.matches("[a-zA-Z]", String.valueOf(primero));
 	}
@@ -98,8 +94,10 @@ public class ParserIndicador {
 			return 4;
 		} else if(this.esMenos(token)) {
 			return 5;
-		} else {
+		} else if (this.esEOL(token)){
 			return 6;
+		} else {
+			return 7;
 		}
 		
 	}
@@ -200,6 +198,11 @@ public class ParserIndicador {
 				}
 				
 				tokens.add(numero);
+				
+			} else {
+				
+				tokens.add(String.valueOf(primero));
+				i++;
 				
 			}
 						

@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.caia.dondeinvierto.auxiliar.ParserCSV;
-import com.caia.dondeinvierto.forms.LoginForm;
+import com.caia.dondeinvierto.forms.*;
 import com.caia.dondeinvierto.models.Usuario;
 
 import iceblock.connection.ConnectionManager;
@@ -102,12 +102,12 @@ public class MiController {
 		return model;
 		
 	}
-
+	
 	// Catchea post en login
 	@RequestMapping(value="login", method={RequestMethod.POST})
-	public ModelAndView autentificarLogin(LoginForm login, ModelAndView model, HttpSession session) throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, SQLException{
+	public ModelAndView autentificarLogin(HttpSession session, LoginForm login) throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, SQLException{
 		
-		ModelAndView newModel = new ModelAndView();
+		ModelAndView model = new ModelAndView();
 		
 		// Checkeo de datos
 		if(!login.camposVacios()){
@@ -122,37 +122,37 @@ public class MiController {
 					
 					session.setAttribute("usuario", usuario);
 					
-					newModel.setViewName("inicio");
-					newModel.addObject("usuario", usuario);
+					model.setViewName("inicio");
+					model.addObject("usuario", usuario);
 												
 				// Error usuario no corresponde
 				} else {
 					
-					System.out.println("Usuario no existe");
-					newModel.setViewName("login");
-					newModel.addObject("command", new LoginForm());
+					model.addObject("msg",4);
+					model.setViewName("login");
+					model.addObject("command", new LoginForm());
 						
 				}
 				
 			// Error caracteres ilegales
 			} else {
-					
-				System.out.println("Caracteres ilegales");
-				newModel.setViewName("login");
-				newModel.addObject("command", new LoginForm());
+				
+				model.addObject("msg",3);
+				model.setViewName("login");
+				model.addObject("command", new LoginForm());
 					
 			}
 			
 		// Error campos vacios
 		} else {
 				
-			System.out.println("Campos vacios");
-			newModel.setViewName("login");
-			newModel.addObject("command", new LoginForm());
+			model.addObject("msg",2);
+			model.setViewName("login");
+			model.addObject("command", new LoginForm());
 				
 		}
 		
-		return newModel;
+		return model;
 						
 	}
 	
@@ -165,6 +165,7 @@ public class MiController {
 		if(session.getAttribute("usuario") == null){
 			
 			model.setViewName("login");
+			model.addObject("msg",1);
 			model.addObject("command",new LoginForm());
 			
 		} else {
@@ -189,6 +190,7 @@ public class MiController {
 		if(session.getAttribute("usuario") == null){
 			
 			model.setViewName("login");
+			model.addObject("msg",1);
 			model.addObject("command",new LoginForm());
 			
 		} else {
@@ -273,6 +275,66 @@ public class MiController {
 		}
 		
 		model.setViewName("proyecto");
+		return model;
+		
+	}
+	
+	// Ir a indicadores
+	@RequestMapping(value="gestionIndicadores", method={RequestMethod.GET})
+	public ModelAndView irAIndicadores(HttpSession session){
+		
+		ModelAndView model = new ModelAndView();
+		
+		if(session.getAttribute("usuario") == null){
+			model.setViewName("login");
+			model.addObject("msg",1);
+			model.addObject("command",new LoginForm());
+		} else {
+			
+			model.setViewName("gestionIndicadores");
+			model.addObject("command",new CrearIndicadorForm());	
+			
+		}
+		
+		return model;
+		
+	}
+	
+	// Generar indicador 
+	@RequestMapping(value="generarIndicador", method = RequestMethod.POST)
+	public ModelAndView generarIndicador(HttpSession session, CrearIndicadorForm indicadorForm) {
+		
+		ModelAndView model = new ModelAndView();
+		
+		if(session.getAttribute("usuario") == null){
+			model.setViewName("login");
+			model.addObject("command",new LoginForm());
+		} else {
+			
+			model.setViewName("gestionIndicadores");
+			if(!indicadorForm.camposVacios()){
+				
+				if(indicadorForm.analizar()){
+					
+					model.addObject("command",indicadorForm);
+					model.addObject("msg",0);
+					
+				} else {
+					
+					model.addObject("command",new CrearIndicadorForm());
+					model.addObject("msg",2);
+					
+				}
+				
+			} else {
+				
+				model.addObject("command",new CrearIndicadorForm());
+				model.addObject("msg",1);
+				
+			}
+			
+		}
+		
 		return model;
 		
 	}

@@ -45,7 +45,7 @@
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Indicadores<span class="caret"></span></a>
 							<ul class="dropdown-menu">
 								<li><a href="#">Consultar indicadores</a></li>
-								<li><a href="#">Gestión indicadores</a></li>
+								<li><a href="gestionIndicadores.html">Gestión indicadores</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">
@@ -99,7 +99,7 @@
 				</a>
 			</div>
 			<div class="col-sm-4">
-				<a class="col" href="#">
+				<a class="col" href="gestionIndicadores.html">
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h3 class="panel-title">Indicadores</h3>
