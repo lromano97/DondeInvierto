@@ -18,6 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.caia.dondeinvierto.auxiliar.ParserCSV;
 import com.caia.dondeinvierto.forms.*;
+import com.caia.dondeinvierto.models.Database;
+import com.caia.dondeinvierto.models.Indicador;
 import com.caia.dondeinvierto.models.Usuario;
 
 import iceblock.connection.ConnectionManager;
@@ -52,7 +54,7 @@ public class MiController {
 			
 			model.setViewName("inicio");
 			model.addObject("usuario",usuario);
-
+		
 		}
 		
 		return model;
@@ -119,8 +121,10 @@ public class MiController {
 				if(listaUsuarios.size()>0){	
 					
 					Usuario usuario = login.buscaUsuario().get(0);
+					Database database = new Database();
 					
 					session.setAttribute("usuario", usuario);
+					session.setAttribute("database", database);
 					
 					model.setViewName("inicio");
 					model.addObject("usuario", usuario);
@@ -312,26 +316,36 @@ public class MiController {
 		} else {
 			
 			model.setViewName("gestionIndicadores");
+			model.addObject("command",new CrearIndicadorForm());
+			
+			Database database = (Database) session.getAttribute("database");
+			
 			if(!indicadorForm.camposVacios()){
 				
 				if(indicadorForm.analizar()){
 					
-					model.addObject("command",indicadorForm);
-					model.addObject("msg",0);
-					
+					// Indicador aceptado
+					model.addObject("msg",0);							
+					Indicador nuevoIndicador = new Indicador(indicadorForm.getNombre(),indicadorForm.getExpresion());
+	
+					database.addIndicador(nuevoIndicador);
+				
+				// Error sintactico en indicador
 				} else {
 					
-					model.addObject("command",new CrearIndicadorForm());
 					model.addObject("msg",2);
 					
 				}
-				
+			
+			// Error campos vacios
 			} else {
 				
-				model.addObject("command",new CrearIndicadorForm());
 				model.addObject("msg",1);
 				
 			}
+			
+			model.addObject("command",new CrearIndicadorForm());
+			model.addObject("indicadores", database.getIndicadores());
 			
 		}
 		

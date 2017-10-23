@@ -124,40 +124,7 @@
 					</div>
 				</a>
 			</div>
-			<!-- Tabla datos 
-			<div class="page-header" style="clear:both; padding-top:20px;">
-				<h1>Tabla de Datos</h1>
-			</div>
 			
-			<c:choose>
-			    <c:when test="${database.esVacio()}">
-			    	<div class="alert alert-info" role="alert">
-						<strong>Informando!</strong> No se han detectado datos cargados, por favor cargue un archivo ".csv" desde el panel "Proyecto".
-					</div>
-			    </c:when>
-			    <c:otherwise>
-				    <table class="table">
-			            <thead>
-			              <tr>
-			                <th>Empresa</th>
-			                <th>Cuenta</th>
-			                <th>Año</th>
-			                <th>Valor</th>
-			              </tr>
-			            </thead>
-			            <tbody>
-				        <c:forEach items="${database.rows}" var="row">     
-						  	<tr>
-				                <td><c:out value="${(row.empresa).nombreEmpresa}"/></td>
-				                <td><c:out value="${(row.cuenta).nombreCuenta}"/></td>
-				                <td><c:out value="${row.anio}"/></td>
-				                <td><c:out value="${row.valor}"/></td>
-			              	</tr>
-						</c:forEach>
-						</tbody>
-					</table>
-			    </c:otherwise>
-			</c:choose>		-->	
 
 			<!-- jQuery -->
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

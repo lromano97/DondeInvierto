@@ -42,8 +42,8 @@ public class ParserIndicador {
 		return Pattern.matches("([0-9]+)|([0-9]+,[0-9]+)",token); 
 	}
 	
-	private boolean esIndicador(String token) {
-		return Pattern.matches("[a-zA-Z]+",token);
+	private boolean esVariable(String token) {
+		return (Pattern.matches("#[a-zA-Z]+",token) || Pattern.matches("&[a-zA-Z]+",token));
 	}
 	
 	private boolean esOperador(String token) {
@@ -88,7 +88,7 @@ public class ParserIndicador {
 			return 1;
 		} else if(this.esConstante(token)) {
 			return 2;
-		} else if(this.esIndicador(token)) {
+		} else if(this.esVariable(token)) {
 			return 3;
 		} else if(this.esOperador(token)) {
 			return 4;
@@ -130,7 +130,7 @@ public class ParserIndicador {
 			} else if(primero == '^') {
 				tokens.add(String.valueOf(primero));
 				i++;
-			} else if(esChar(primero)) {
+			} else if(primero == '#' || primero == '&') {
 				
 				String indicador = "" + primero;
 				char character;

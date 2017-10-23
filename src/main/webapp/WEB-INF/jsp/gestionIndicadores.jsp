@@ -10,6 +10,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 		<link href="resources/css/web.css" rel="stylesheet">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 		<title>Gestion de Indicadores - dondeInvierto?</title>
 	</head>
 
@@ -107,14 +108,41 @@
 					</div>
 					<div class="form-group">
 						<label for="inputFormula">Fórmula</label>
-						<form:input path="expresion" cssClass="form-control" class="inputExpresion" style="width:600px;"/>
+						<form:input id="inputExpresion" path="expresion" autocomplete="off" cssClass="form-control" class="inputExpresion" style="width:600px;"/>
 					</div>
 					<button class="btn btn-lg btn-primary btn-block" class="submitIndicador" type="submit">Crear indicador</button>
 				</form:form>
 				
+				<div class="row">
+					<div class="col-sm-4" style="width:50%;">
+						<div class="panel panel-info">
+							<div class="panel-heading">
+								<h3 class="panel-title">Tus indicadores</h3>
+							</div>
+							<div class="panel-body">
+				              	<c:forEach items="${indicadores}" var="indicador">     
+										<button style="outline:0;" class="btn btn-info" onClick="indicadorToInput(this)"><c:out value='${indicador.getNombre()}'/></button>
+								</c:forEach>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-4" style="width:50%;">
+						<div class="panel panel-success">
+							<div class="panel-heading">
+								<h3 class="panel-title">Tus cuentas</h3>
+							</div>
+							<div class="panel-body">
+				              	<!-- <c:forEach items="${indicadores}" var="indicador">     
+										<button style="outline:0;" class="btn btn-success" onClick="indicadorToInput(this)"><c:out value='${indicador.getNombre()}'/></button>
+								</c:forEach> -->
+							</div>
+						</div>
+					</div>
+				</div>
+				 	
 			</div>	
 			<!-- jQuery -->
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+			<script src="resources/js/autocompleteIndicador.js"></script>
 			<!-- Bootstrap js -->
 			<script src="resources/bootstrap/js/bootstrap.min.js"></script>
 
