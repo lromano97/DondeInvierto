@@ -103,14 +103,16 @@
 					
 				<form:form action="generarIndicador.html" method="POST">
 					<div class="form-group">
+					<div class="row">
 						<label for="inputNombre">Nombre</label>
-						<form:input path="nombre" cssClass="form-control" class="inputNombre" style="width:150px;"/> 
+						<form:input path="nombre" cssClass="form-control" class="inputNombre col-sm-2" style="max-width:250px;"/> 
 					</div>
-					<div class="form-group">
-						<label for="inputFormula">Fórmula</label>
-						<form:input id="inputExpresion" path="expresion" autocomplete="off" cssClass="form-control" class="inputExpresion" style="width:600px;"/>
+						<div class="row">
+							<label for="inputFormula">Fórmula</label>
+							<form:input id="inputExpresion" data-toggle="tooltip" title="Aiuda" data-placement="right" path="expresion" autocomplete="off" cssClass="form-control" class="inputExpresion col-sm-4" style="max-width:500px;"/>
+						</div>	
 					</div>
-					<button class="btn btn-lg btn-primary btn-block" class="submitIndicador" type="submit">Crear indicador</button>
+					<button class="btn btn-primary" class="submitIndicador form-control" type="submit">Crear indicador</button>
 				</form:form>
 				
 				<div class="row">

@@ -66,64 +66,29 @@
 
 			<!-- DivInfo -->
 			<div class="jumbotron">
-				<h1>Bienvenido, <c:out value="${usuario.username}"/>.</h1>
-				<p>Seleccione alguna opción desde el menu o desde aquí mismo para comenzar a trabajar.</p>
+				<h1>Evaluar Indicadores</h1>
+				<p>Aplique alguno de los indicadores creados sobre alguna de las empresas para conocer su valor</p>
 			</div>
-			
-			<c:if test="${usuario.getRango()==0}">
-				<div class="col-sm-4">
-						<a class="col" href="proyecto.html">
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h3 class="panel-title">Proyecto</h3>
-								</div>
-								<div class="panel-body">
-									<center><img src="resources/images/proyecto.png" class="img-responsive"></center>
-									<p class="info">Edite el proyecto cargando un archivo ".csv" con los datos para poder comenzar a trabajar.</p>
-								</div>
-							</div>
-						</a>
-				</div>
-			</c:if>
-			<div class="col-sm-4">
-				<a class="col" href="#">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Cuentas</h3>
-						</div>
-						<div class="panel-body">
-							<center><img src="resources/images/consultas.png" class="img-responsive"></center>
-							<p class="info">Haga consultas específicas usando filtros para ver los valores de las distintas cuentas cargadas.</p>
-						</div>
-					</div>
-				</a>
-			</div>
-			<div class="col-sm-4">
-				<a class="col" href="gestionIndicadores.html">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Indicadores</h3>
-						</div>
-						<div class="panel-body">
-							<center><img src="resources/images/indicadores.png" class="img-responsive"></center>
-							<p class="info">Gestione los indicadores económicos.</p>
-						</div>
-					</div>
-				</a>
-			</div>
-			<div class="col-sm-4">
-				<a class="col" href="#">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Metodologías</h3>
-						</div>
-						<div class="panel-body">
-							<center><img src="resources/images/metodologias.png" class="img-responsive"></center>
-							<p class="info">Gestione las metodologías.</p>
-						</div>
-					</div>
-				</a>
-			</div>
+			  <div class="container">
+				<h4>Filtro de evaluacion</h4>
+			    <form>
+			      <div class="form-group-sm row col-sm-4">
+			        <label for="cuenta">Indicador</label>
+			        <select class="form-control" id="cuenta" name="">
+			          <option value=""></option>
+			        </select>
+			        <label for="empresa">Empresa</label>
+			        <select class="form-control" id="empresa"name="">
+			          <option value=""></option>
+			        </select>
+			     	<label for="anio">Año</label>
+					    <select class="form-control" id="anio" name="">
+				  	      <option value=""></option>
+				   	    </select>
+				  	    <button type="button" name="button" class="btn btn-primary">Evaluar</button>
+				  </div>
+			    </form>
+			 </div>
 			
 
 			<!-- jQuery -->

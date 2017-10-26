@@ -368,4 +368,75 @@ public class MiController {
 		
 	}
 	
+	@RequestMapping(value="consultarCuenta", method={RequestMethod.GET})
+	public ModelAndView irAConsultarCuenta(HttpSession session){
+		
+		ModelAndView model = new ModelAndView();
+				
+		if(session.getAttribute("usuario") == null){
+			
+			model.setViewName("login");
+			model.addObject("msg",1);
+			model.addObject("command",new LoginForm());
+			
+		} else {
+			
+			Usuario usuario = (Usuario) session.getAttribute("usuario");
+				
+			model.setViewName("consultarCuenta");
+			model.addObject("usuario",usuario);
+			
+		}
+		
+		return model;
+		
+	}
+	
+	@RequestMapping(value="consultarIndicador", method={RequestMethod.GET})
+	public ModelAndView irAConsultarIndicador(HttpSession session){
+		
+		ModelAndView model = new ModelAndView();
+				
+		if(session.getAttribute("usuario") == null){
+			
+			model.setViewName("login");
+			model.addObject("msg",1);
+			model.addObject("command",new LoginForm());
+			
+		} else {
+			
+			Usuario usuario = (Usuario) session.getAttribute("usuario");
+				
+			model.setViewName("consultarIndicador");
+			model.addObject("usuario",usuario);
+			
+		}
+		
+		return model;
+		
+	}
+	@RequestMapping(value="consultarMetodologia", method={RequestMethod.GET})
+	public ModelAndView irAConsultarMetodologia(HttpSession session){
+		
+		ModelAndView model = new ModelAndView();
+				
+		if(session.getAttribute("usuario") == null){
+			
+			model.setViewName("login");
+			model.addObject("msg",1);
+			model.addObject("command",new LoginForm());
+			
+		} else {
+			
+			Usuario usuario = (Usuario) session.getAttribute("usuario");
+				
+			model.setViewName("consultarMetodologia");
+			model.addObject("usuario",usuario);
+			
+		}
+		
+		return model;
+		
+	}
 }
+
