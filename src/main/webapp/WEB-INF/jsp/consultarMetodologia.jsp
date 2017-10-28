@@ -10,7 +10,7 @@
 		<meta name="author" content="">
 		<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 		<link href="resources/css/web.css" rel="stylesheet">
-		<title>Inicio - dondeInvierto</title>
+		<title>Consultar Metodologias - dondeInvierto</title>
 	</head>
 
 	<body>
@@ -52,7 +52,7 @@
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Metodologías<span class="caret"></span></a>
 							<ul class="dropdown-menu">
 								<li><a href="consultarMetodologia.html">Consultar metodologías</a></li>
-								<li><a href="#">Gestión metodologías</a></li>
+								<li><a href="gestionMetodologias.html">Gestión metodologías</a></li>
 							</ul>
 						</li>
 						<li><a href="logout.html">Cerrar sesión</a></li>
@@ -63,25 +63,40 @@
 
 		<!-- Container -->
 		<div class="container theme-showcase" role="main">
-
+			<c:choose>
+			    <c:when test="${msg == 0}">
+			    	<div class="alert alert-success" role="alert">
+						<strong>Metodologia superada</strong> La empresa paso satisfactoriamente todas las condiciones de la metodologia.
+					</div>
+			    </c:when>
+			    <c:when test="${msg == 1}">
+			    	<div class="alert alert-danger" role="alert">
+						<strong>Metodologia no superada</strong> La empresa no paso satisfactoriamente las distintas condiciones de la metodologia.
+					</div>
+			    </c:when>
+			</c:choose>
 			<!-- DivInfo -->
 			<div class="jumbotron">
 				<h1>Evaluar Metodologia</h1>
 				<p>Aplique alguna de las metodologias creadas sobre alguna de las empresas para saber si la cumple</p>
 			</div>
 			  <div class="container">
-				<h4>Filtro de evaluacion</h4>
+				<h3>Filtro de evaluacion</h3>
 			    <form>
 			      <div class="form-group-sm row col-sm-4">
 			        <label for="cuenta">Metodologia</label>
-			        <select class="form-control" id="cuenta" name="">
+			        <select class="form-control" id="cuenta" name="" style="margin:5px 5px 5px 10px;">
 			          <option value=""></option>
 			        </select>
 			        <label for="empresa">Empresa</label>
-			        <select class="form-control" id="empresa"name="">
+			        <select class="form-control" id="empresa"name="" style="margin:5px 5px 5px 10px;">
 			          <option value=""></option>
 			        </select>
-				  	    <button type="button" name="button" class="btn btn-primary">Evaluar</button>
+			        <label for="anio">Año</label>
+			        <select class="form-control" id="empresa"name="" style="margin:5px 5px 5px 10px;">
+			          <option value=""></option>
+			        </select>
+				  	    <button type="button" name="button" class="btn btn-primary" style="margin:5px 5px 5px 10px;">Evaluar</button>
 				  </div>
 			    </form>
 			 </div>

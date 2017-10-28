@@ -438,5 +438,29 @@ public class MiController {
 		return model;
 		
 	}
+	
+	@RequestMapping(value="gestionMetodologias", method={RequestMethod.GET})
+	public ModelAndView irAMetodologia(HttpSession session){
+		
+		ModelAndView model = new ModelAndView();
+				
+		if(session.getAttribute("usuario") == null){
+			
+			model.setViewName("login");
+			model.addObject("msg",1);
+			model.addObject("command",new LoginForm());
+			
+		} else {
+			
+			Usuario usuario = (Usuario) session.getAttribute("usuario");
+				
+			model.setViewName("gestionMetodologias");
+			model.addObject("usuario",usuario);
+			
+		}
+		
+		return model;
+		
+	}
 }
 

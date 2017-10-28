@@ -45,15 +45,15 @@
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Indicadores<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="#">Consultar indicadores</a></li>
+								<li><a href="consultarIndicador.html">Consultar indicadores</a></li>
 								<li><a href="gestionIndicadores.html">Gestión indicadores</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Metodologías<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="#">Consultar metodologías</a></li>
-								<li><a href="#">Gestión metodologías</a></li>
+								<li><a href="consultarMetodologia.html">Consultar metodologías</a></li>
+								<li><a href="gestionMetodologias.html">Gestión metodologías</a></li>
 							</ul>
 						</li>
 						<li><a href="logout.html">Cerrar sesión</a></li>
@@ -105,14 +105,14 @@
 					<div class="form-group">
 					<div class="row">
 						<label for="inputNombre">Nombre</label>
-						<form:input path="nombre" cssClass="form-control" class="inputNombre col-sm-2" style="max-width:250px;"/> 
+						<form:input path="nombre" cssClass="form-control" class="inputNombre col-sm-2" style="max-width:250px; margin:5px 5px 5px 10px;"/> 
 					</div>
 						<div class="row">
 							<label for="inputFormula">Fórmula</label>
-							<form:input id="inputExpresion" data-toggle="tooltip" title="Aiuda" data-placement="right" path="expresion" autocomplete="off" cssClass="form-control" class="inputExpresion col-sm-4" style="max-width:500px;"/>
+							<form:input id="inputExpresion" data-toggle="tooltip" title="Aiuda" data-placement="right" path="expresion" autocomplete="off" cssClass="form-control" class="inputExpresion col-sm-4" style="max-width:500px; margin:5px 5px 5px 10px;"/>
 						</div>	
 					</div>
-					<button class="btn btn-primary" class="submitIndicador form-control" type="submit">Crear indicador</button>
+					<button class="btn btn-primary" class="submitIndicador form-control" type="submit" style="margin:5px 5px 5px 10px;">Crear indicador</button>
 				</form:form>
 				
 				<div class="row">

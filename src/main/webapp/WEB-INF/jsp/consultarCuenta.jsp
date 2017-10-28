@@ -10,7 +10,7 @@
 		<meta name="author" content="">
 		<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 		<link href="resources/css/web.css" rel="stylesheet">
-		<title>Inicio - dondeInvierto</title>
+		<title>Consultar Cuenta - dondeInvierto</title>
 	</head>
 
 	<body>
@@ -52,7 +52,7 @@
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Metodologías<span class="caret"></span></a>
 							<ul class="dropdown-menu">
 								<li><a href="consultarMetodologia.html">Consultar metodologías</a></li>
-								<li><a href="#">Gestión metodologías</a></li>
+								<li><a href="gestionMetodologias.html">Gestión metodologías</a></li>
 							</ul>
 						</li>
 						<li><a href="logout.html">Cerrar sesión</a></li>
@@ -63,29 +63,35 @@
 
 		<!-- Container -->
 		<div class="container theme-showcase" role="main">
-
+			<c:choose>
+			    <c:when test="${msg == 0}">
+			    	<div class="alert alert-info" role="alert">
+						La cuenta tiene el valor .
+					</div>
+			    </c:when>
+			</c:choose>
 			<!-- DivInfo -->
 			<div class="jumbotron">
 				<h1>Consultar Cuenta</h1>
 				<p>Consulte las distintas cuentas que fueron cargadas por usted</p>
 			</div>
 			  <div class="container">
-				<h4>Filtro de busqueda</h4>
+				<h3>Filtro de busqueda</h3>
 			    <form>
 			      <div class="form-group-sm row col-sm-4">
 			        <label for="cuenta">Cuenta</label>
-			        <select class="form-control" id="cuenta" name="">
+			        <select class="form-control" id="cuenta" name="" style="margin:5px 5px 5px 10px;">
 			          <option value=""></option>
 			        </select>
 			        <label for="empresa">Empresa</label>
-			        <select class="form-control" id="empresa"name="">
+			        <select class="form-control" id="empresa"name="" style="margin:5px 5px 5px 10px;">
 			          <option value=""></option>
 			        </select>
 			     	<label for="anio">Año</label>
-					    <select class="form-control" id="anio" name="">
+					    <select class="form-control" id="anio" name="" style="margin:5px 5px 5px 10px;">
 				  	      <option value=""></option>
 				   	    </select>
-				  	    <button type="button" name="button" class="btn btn-primary">Consultar</button>
+				  	    <button type="button" name="button" class="btn btn-primary" style="margin:5px 5px 5px 10px;">Consultar</button>
 				  </div>
 			    </form>
 			 </div>

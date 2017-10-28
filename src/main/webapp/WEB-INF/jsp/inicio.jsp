@@ -52,7 +52,7 @@
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Metodologías<span class="caret"></span></a>
 							<ul class="dropdown-menu">
 								<li><a href="consultarMetodologia.html">Consultar metodologías</a></li>
-								<li><a href="#">Gestión metodologías</a></li>
+								<li><a href="gestionMetodologias.html">Gestión metodologías</a></li>
 							</ul>
 						</li>
 						<li><a href="logout.html">Cerrar sesión</a></li>

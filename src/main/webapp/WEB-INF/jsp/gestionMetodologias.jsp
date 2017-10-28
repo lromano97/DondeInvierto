@@ -1,16 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<html lang="en">
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<meta name="description" content="">
-		<meta name="author" content="">
+		<meta charset="ISO-8859-1">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 		<link href="resources/css/web.css" rel="stylesheet">
-		<title>Cargar Proyecto - dondeInvierto</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<title>Gestion de Indicadores - dondeInvierto?</title>
 	</head>
 
 	<body>
@@ -60,70 +62,81 @@
 				</div>
 			</div>
 		</nav>
-
+		
 		<!-- Container -->
 		<div class="container theme-showcase" role="main">
-			
+				
 			<c:choose>
 			    <c:when test="${msg == 0}">
 			    	<div class="alert alert-success" role="alert">
-						<strong>Bien hecho!</strong> El archivo se ha cargado correctamente, ya puede empezar a trabajar.
+						<strong>Bien hecho!</strong> El indicador se ha creado corretamente.
 					</div>
 			    </c:when>
 			    <c:when test="${msg == 1}">
 			    	<div class="alert alert-danger" role="alert">
-						<strong>Error!</strong> El campo o el archivo se encuentra vacio. Intentelo nuevamente.
+						<strong>Error!</strong> Un campo estaba vacío, por favor intentelo nuevamente.
 					</div>
 			    </c:when>
 			    <c:when test="${msg == 2}">
 			    	<div class="alert alert-danger" role="alert">
-						<strong>Error!</strong> El archivo no es un ".csv", por favor vuelva a intentarlo usando un archivo con este formato.
+						<strong>Error!</strong> Hubo un error sintáctico, por favor intentelo nuevamente.
 					</div>
 			    </c:when>
 			    <c:when test="${msg == 3}">
 			    	<div class="alert alert-danger" role="alert">
-						<strong>Error!</strong> I/O Exception por favor contacte con algún administrador de la web.
-					</div>
-			    </c:when>
-			    <c:when test="${msg == 4}">
-			    	<div class="alert alert-danger" role="alert">
-						<strong>Error!</strong> El archivo .csv se encuentra vacio. Intentelo nuevamente con uno que se encuentre completo.
-					</div>
-			    </c:when>
-			    <c:when test="${msg == 5}">
-			    	<div class="alert alert-danger" role="alert">
-						<strong>Error!</strong> El archivo .csv se encuentra incompleto (inconsistencias en la cantidad de columnas). Por favor completelo e intente nuevamente.
-					</div>
-			    </c:when>
-			    <c:when test="${msg == 6}">
-			    	<div class="alert alert-danger" role="alert">
-						<strong>Error!</strong> Las columnas no concuerdan con el formato acordado. Favor de modificarlas e intentarlo nuevamente.
+						<strong>Error!</strong> Ya existe un indicador con ese nombre. Por favor elija otro.
 					</div>
 			    </c:when>
 			</c:choose>
 			
 			<!-- DivInfo -->
 			<div class="jumbotron">
-				<h1>Cargar Proyecto.</h1>
-				<p>Cargue un archivo ".csv" para reemplazar los datos del proyecto sobre los cuales trabajan los usuarios.</p>
+				<h1>Metodologias.</h1>
+				<p>Cree, edite o elimine metodologias creadas por usted.</p>
+			</div>
+
+			<!-- Formulario -->
+			<div class="page-header">
+				<h1>Nueva Metodologia</h1>
 			</div>
 			
-			<form method="post" action="generarProyecto.html" enctype="multipart/form-data">
-				<div class="form-group">
-					<label for="exampleInputFile">Archivo</label>
-					<input type="file" name="file" id="exampleInputFile">
-					<p class="help-block">Debe ser archivo de extensión ".csv" </p>
-				</div>
-				<input type="submit" value="Cargar CSV">
-			</form>
-
+			<div class="container">
+				<div class="row">
+      				<input type="text" class="col-sm-2" name="" value="" placeholder="Nombre" style="margin:5px 5px 5px 10px; height:30px;">
+    			</div>
+    			<form method="post" id="condicionesForm">
+	      				<h3>Condiciones</h3>
+	        			<div class="form-group row">
+	          				<input type="text" class="col-sm-2" placeholder="Parametro" name="parametro1[0]" value="" style="height:30px; margin:5px 5px 5px 10px;">
+	          				<select class="col-sm-2" name="comparador[0]" style="height:30px; margin:5px 5px 5px 5px;">
+	            				<option value="" selected disabled>Comparador</option>
+	          				</select>
+	          				<input type="text" class="col-sm-2" placeholder="Parametro" name="parametro2[0]" value="" style="margin:5px 10px 5px 5px; height:30px;">
+	          				<div class="col-sm-1">
+	          					<button type="button" class="btn btn-default addButton"><i class="fa fa-plus" style="font-size:24px"></i> </button>
+	          				</div>
+	          			</div>
+	        			<div class="form-group row hide" id="condicionTemplate">
+	          				<input type="text" class="col-sm-2" placeholder="Parametro" name="parametro1" value="" style="height:30px; margin:5px 5px 5px 10px;">
+	          				<select class="col-sm-2" name="comparador" style="height:30px; margin:5px 5px 5px 5px;">
+	            				<option value="" selected disabled>Comparador</option>
+	          				</select>
+	          				<input type="text" class="col-sm-2" placeholder="Parametro" name="parametro2" value="" style="margin:5px 10px 5px 5px; height:30px;">
+	          				<div class="col-sm-1">
+	          					<button type="button" class="btn btn-default removeButton"><i class="fa fa-minus" style="font-size:24px"></i> </button>
+	          				</div>
+	        			</div>
+	        			 <button type="button" name="button" class="btn btn-primary" style="margin:5px 5px 5px 0px;">Crear metodologia</button>
+	    		</form>
+			</div>	
 			<!-- jQuery -->
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+			<script src="resources/js/autocompleteIndicador.js"></script>
+			<script src="resources/js/addingConditions.js"></script>
 			<!-- Bootstrap js -->
 			<script src="resources/bootstrap/js/bootstrap.min.js"></script>
-		
+
 		</div>
-		
+
 	</body>
 
 </html>
