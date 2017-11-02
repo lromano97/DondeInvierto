@@ -6,7 +6,7 @@ public class CrearIndicadorForm {
 
 	private String nombre;
 	private String expresion;
-	
+	private ParserIndicador parser;
 	public String getNombre() {
 		return nombre;
 	}
@@ -23,11 +23,13 @@ public class CrearIndicadorForm {
 		this.expresion = expresion;
 	}
 	
-	public boolean analizar(){
-		
-		ParserIndicador parser = new ParserIndicador(expresion);
+	public boolean existeRecursividad(){
+		parser = new ParserIndicador(nombre,expresion);
+		return parser.existeRecursividad();
+	}
+	
+	public boolean analizarSintaxis(){
 		return parser.analizar();
-		
 	}
 	
 	public boolean camposVacios(){

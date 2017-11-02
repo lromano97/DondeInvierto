@@ -5,5 +5,5 @@ function indicadorToInput(button){
 }
 
 function cuentaToInput(button){
-	inputIndicador.value =  inputIndicador.value + "$" +button.innerHTML;
+	inputIndicador.value =  inputIndicador.value + "&" +button.innerHTML;
 }

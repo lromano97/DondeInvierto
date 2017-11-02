@@ -1,10 +1,10 @@
 package com.caia.dondeinvierto.models;
 
 public class Cotizacion {
-	public Empresa empresa;
-	public Cuenta cuenta;
-	public int anio;
-	public double valor;
+	private Empresa empresa;
+	private Cuenta cuenta;
+	private int anio;
+	private double valor;
 	
 	// Constructor
 	public Cotizacion(Empresa _empresa, Cuenta _cuenta, int _anio, double _valor){

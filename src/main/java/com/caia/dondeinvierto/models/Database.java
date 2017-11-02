@@ -3,27 +3,19 @@ package com.caia.dondeinvierto.models;
 import java.util.ArrayList;
 
 public class Database {
-
 	
-	private static Database instance = null;
-	ArrayList<Indicador> indicadores = new ArrayList<Indicador>();
-	ArrayList<Cotizacion> cotizaciones = new ArrayList<Cotizacion>();
-	ArrayList<String> empresas = new ArrayList<String>();
-	ArrayList<String> cuentas = new ArrayList<String>();
-	ArrayList<Integer> anios = new ArrayList<Integer>();
- 	
-	// Carga con datos del usuario
-	protected Database(){}
+	private ArrayList<Indicador> indicadores = new ArrayList<Indicador>();
+	private ArrayList<Cotizacion> cotizaciones = new ArrayList<Cotizacion>();
+	private ArrayList<String> empresas = new ArrayList<String>();
+	private ArrayList<String> cuentas = new ArrayList<String>();
+	private ArrayList<Integer> anios = new ArrayList<Integer>();
 	
-	public static Database getInstance() {
-		if(instance == null) {
-			instance = new Database();
-		}
-		return instance;
+	public boolean esVacio(){
+		return cotizaciones.isEmpty();
 	}
 	
-	public void addRow(Cotizacion unaRow){
-		cotizaciones.add(unaRow);
+	public void addCotizacion(Cotizacion unaCotizacion){
+		cotizaciones.add(unaCotizacion);
 	}
 	
 	public void addIndicador(Indicador unIndicador){
@@ -32,6 +24,10 @@ public class Database {
 	
 	public ArrayList<Indicador> getIndicadores(){
 		return indicadores;
+	}
+	
+	public ArrayList<Cotizacion> getCotizaciones(){
+		return cotizaciones;
 	}
 	
 	public ArrayList<String> getCuentas(){
@@ -63,7 +59,7 @@ public class Database {
 		int posicion;
 		Cotizacion cotizacionARetornar;
 		for(posicion = 0; posicion<indicadores.size(); posicion++) {
-			if(nombreCuenta.equals(cotizaciones.get(posicion).getCuenta().getNombre()) && cotizaciones.get(posicion).anio == anio) {
+			if(nombreCuenta.equals(cotizaciones.get(posicion).getCuenta().getNombre()) && cotizaciones.get(posicion).getAnio() == anio) {
 				cotizacionARetornar = cotizaciones.get(posicion);
 				return cotizacionARetornar;
 			}
@@ -84,4 +80,5 @@ public class Database {
 		}
 		return null;
 	}
+
 }

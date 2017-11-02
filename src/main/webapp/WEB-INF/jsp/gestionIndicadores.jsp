@@ -76,12 +76,17 @@
 						<strong>Error!</strong> Un campo estaba vacío, por favor intentelo nuevamente.
 					</div>
 			    </c:when>
-			    <c:when test="${msg == 2}">
+			    <c:when test="${msg == 4}">
 			    	<div class="alert alert-danger" role="alert">
 						<strong>Error!</strong> Hubo un error sintáctico, por favor intentelo nuevamente.
 					</div>
 			    </c:when>
 			    <c:when test="${msg == 3}">
+			    	<div class="alert alert-danger" role="alert">
+						<strong>Error!</strong> Se ha intenado generar un indicador recursivo, por favor pruebe nuevamente.
+					</div>
+			    </c:when>
+			    <c:when test="${msg == 4}">
 			    	<div class="alert alert-danger" role="alert">
 						<strong>Error!</strong> Ya existe un indicador con ese nombre. Por favor elija otro.
 					</div>
@@ -135,7 +140,7 @@
 							</div>
 							<div class="panel-body">
 				              	<c:forEach items="${cuentas}" var="cuenta">     
-										<button style="outline:0;" class="btn btn-success" onClick="cuentaToInput(this)"><c:out value='${cuenta.getNombre()}'/></button>
+										<button style="outline:0;" class="btn btn-success" onClick="cuentaToInput(this)"><c:out value='${cuenta}'/></button>
 								</c:forEach>
 							</div>
 						</div>

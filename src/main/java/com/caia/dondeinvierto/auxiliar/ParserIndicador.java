@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 public class ParserIndicador {
 	
 	int estado = 0;
+	String nombre;
 	String formula;
 	int STATE_FINAL = 99;
 	int STATE_ERROR = -1;
@@ -20,7 +21,8 @@ public class ParserIndicador {
 			{STATE_ERROR,5,STATE_ERROR,STATE_ERROR,0,0,STATE_FINAL,STATE_ERROR},
 		};
 	
-	public ParserIndicador(String formula) {
+	public ParserIndicador(String nombre, String formula) {
+		this.nombre = nombre;
 		this.formula = formula;
 		this.obtenerTokens();
 	}
@@ -102,7 +104,7 @@ public class ParserIndicador {
 		
 	}
 	
-	void obtenerTokens() {
+	private void obtenerTokens() {
 		
 		int i = 0;
 		while(i < formula.length()) {
@@ -254,6 +256,11 @@ public class ParserIndicador {
 			return false;
 		}
 		
+	}
+	
+	public boolean existeRecursividad(){
+		String tokenRecursivo = "#" + nombre;
+		return tokens.contains(tokenRecursivo);
 	}
 	
 	public void printTokens() {

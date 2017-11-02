@@ -54,7 +54,7 @@ public class MiController {
 			
 			model.setViewName("inicio");
 			model.addObject("usuario",usuario);
-		
+			
 		}
 		
 		return model;
@@ -121,7 +121,7 @@ public class MiController {
 				if(listaUsuarios.size()>0){	
 					
 					Usuario usuario = login.buscaUsuario().get(0);
-					Database database = Database.getInstance();
+					Database database = new Database();
 					
 					session.setAttribute("usuario", usuario);
 					session.setAttribute("database", database);
@@ -175,9 +175,13 @@ public class MiController {
 		} else {
 			
 			Usuario usuario = (Usuario) session.getAttribute("usuario");
-				
+			
+			Database database = (Database) session.getAttribute("database");
+			
 			model.setViewName("inicio");
 			model.addObject("usuario",usuario);
+			
+			model.addObject("cotizaciones",database.getCotizaciones());
 			
 		}
 		
@@ -222,7 +226,7 @@ public class MiController {
 	
 	// Generar proyecto 
 	@RequestMapping(value="generarProyecto", method = RequestMethod.POST)
-	public ModelAndView generarProyecto(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+	public ModelAndView generarProyecto(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpSession session) {
 		
 		ModelAndView model = new ModelAndView();
 						
@@ -235,7 +239,7 @@ public class MiController {
 			if(extension.equals(".csv")){
 				
 				try {
-					
+										
 					ParserCSV parser = new ParserCSV(file);
 					
 					if(!parser.csvEsVacio()){
@@ -243,14 +247,15 @@ public class MiController {
 						if(parser.csvCompleto()){
 							
 							if(parser.checkColumnTypes()){
-								parser.generarRowsCSV(file);
+								
+								Database database = (Database) session.getAttribute("database");
+								
+								parser.generarRowsCSV(database,file);
 								model.addObject("msg", 0);
 								
 							// Error de tipos en columnas
 							} else {
-								
 								model.addObject("msg", 6);
-								
 							}
 						
 						// Error Columnas CSV incompletas
@@ -295,8 +300,13 @@ public class MiController {
 			model.addObject("command",new LoginForm());
 		} else {
 			
+			Database database = (Database) session.getAttribute("database");
+			
 			model.setViewName("gestionIndicadores");
 			model.addObject("command",new CrearIndicadorForm());	
+			
+			model.addObject("indicadores",database.getIndicadores());	
+			model.addObject("cuentas",database.getCuentas());	
 			
 		}
 		
@@ -322,19 +332,24 @@ public class MiController {
 			
 			if(!indicadorForm.camposVacios()){
 				
-				if(indicadorForm.analizar()){
+				if(!indicadorForm.existeRecursividad()){
 					
-					// Indicador aceptado
-					model.addObject("msg",0);							
-					Indicador nuevoIndicador = new Indicador(indicadorForm.getNombre(),indicadorForm.getExpresion());
-	
-					database.addIndicador(nuevoIndicador);
+					if(indicadorForm.analizarSintaxis()){
+						
+						// Indicador aceptado
+						model.addObject("msg",0);							
+						Indicador nuevoIndicador = new Indicador(indicadorForm.getNombre(),indicadorForm.getExpresion());
+		
+						database.addIndicador(nuevoIndicador);
+					
+					// Error sintactico en indicador
+					} else {
+						model.addObject("msg",4);
+					}
 				
-				// Error sintactico en indicador
+				// Error indicador recursivo
 				} else {
-					
-					model.addObject("msg",2);
-					
+					model.addObject("msg",3);
 				}
 			
 			// Error campos vacios
@@ -344,9 +359,12 @@ public class MiController {
 				
 			}
 			
+			// CONTROLAR EXISTENCIA DE NOMBRE DE INDICADORES
+			
 			model.addObject("command",new CrearIndicadorForm());
 			model.addObject("indicadores", database.getIndicadores());
-			model.addObject("cuentas", database.getCuentas());			
+			model.addObject("cuentas", database.getCuentas());
+			
 		}
 		
 		return model;

@@ -3,9 +3,6 @@ package com.caia.dondeinvierto.auxiliar;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import javax.xml.crypto.Data;
-
-import org.apache.log4j.net.SyslogAppender;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.caia.dondeinvierto.models.Cotizacion;
@@ -61,7 +58,7 @@ public class ParserCSV {
 		
 	}
 	
-	public void cargarCSV(String rowsCSV[]) {
+	public void cargarCSV(Database database, String rowsCSV[]) {
 		String[] values;
 		Empresa empresa;
 		Cuenta cuenta;
@@ -69,33 +66,32 @@ public class ParserCSV {
 		String valor;
 		for(int i=0; i < rowsCSV.length; i++){
 			
-			Database data = Database.getInstance();
 			values = rowsCSV[i].split(",");
 			empresa = new Empresa(values[0]);
 			
-			if (!data.getEmpresas().contains(empresa.getNombreEmpresa())){
-				data.addEmpresa(empresa.getNombreEmpresa());
+			if (!database.getEmpresas().contains(empresa.getNombreEmpresa())){
+				database.addEmpresa(empresa.getNombreEmpresa());
 			}
 				
 			cuenta = new Cuenta(values[1]);
 				
-			if(!data.getCuentas().contains(cuenta.getNombre())){
-				data.addCuenta(cuenta.getNombre());
+			if(!database.getCuentas().contains(cuenta.getNombre())){
+				database.addCuenta(cuenta.getNombre());
 			}
 				
 			anio = Integer.parseInt(values[2]);
 				
-			if(!data.getAnios().contains(anio)){
-				data.addAnio(anio);
+			if(!database.getAnios().contains(anio)){
+				database.addAnio(anio);
 			}
 				
 			valor = values[3];
-			Database.getInstance().addRow(new Cotizacion(empresa, cuenta, anio, Double.parseDouble(valor)));
+			database.addCotizacion(new Cotizacion(empresa, cuenta, anio, Double.parseDouble(valor)));
 		
 		}
 	}
 	
-	public void generarRowsCSV(MultipartFile file) throws IOException {
+	public void generarRowsCSV(Database database, MultipartFile file) throws IOException {
 		byte[] bytes = file.getBytes();
 		String completeData = new String(bytes);
 		String[] rowsFile = completeData.split("#");
@@ -107,7 +103,7 @@ public class ParserCSV {
 			rowsCSV[i] = rowsCSV[i].replaceAll("[\n\r]","");
 		}
 		
-		cargarCSV(rowsCSV);
+		cargarCSV(database, rowsCSV);
 	}
 	
 	private boolean esEmpresa(String x){
