@@ -1,12 +1,17 @@
 package com.caia.dondeinvierto.forms;
 
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+
 import com.caia.dondeinvierto.auxiliar.ParserIndicador;
+import com.caia.dondeinvierto.models.Indicador;
 
 public class CrearIndicadorForm {
 
 	private String nombre;
 	private String expresion;
 	private ParserIndicador parser;
+	
 	public String getNombre() {
 		return nombre;
 	}
@@ -22,6 +27,36 @@ public class CrearIndicadorForm {
 	public void setExpresion(String expresion) {
 		this.expresion = expresion;
 	}
+
+	public boolean camposVacios(){
+		
+		if(nombre.isEmpty() || expresion.isEmpty() ){
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+	
+	public boolean caracteresInvalidos(){
+		return !Pattern.matches("[a-zA-Z0-9]+", nombre);
+	}
+	
+	public boolean nombreExistente(ArrayList<Indicador> indicadores){
+		
+		System.out.println(indicadores);
+		System.out.println(indicadores.size());
+		System.out.println(indicadores.toArray());
+		
+		for(Indicador indicador : indicadores){
+			if(indicador.getNombre().equals(nombre)){
+				return true;
+			}
+		}
+		
+		return false;
+		
+	}
 	
 	public boolean existeRecursividad(){
 		parser = new ParserIndicador(nombre,expresion);
@@ -32,14 +67,6 @@ public class CrearIndicadorForm {
 		return parser.analizar();
 	}
 	
-	public boolean camposVacios(){
-		
-		if(nombre.isEmpty() || expresion.isEmpty() ){
-			return true;
-		} else {
-			return false;
-		}
-		
-	}
+
 	
 }

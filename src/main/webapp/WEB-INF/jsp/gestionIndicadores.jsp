@@ -76,19 +76,24 @@
 						<strong>Error!</strong> Un campo estaba vacío, por favor intentelo nuevamente.
 					</div>
 			    </c:when>
-			    <c:when test="${msg == 4}">
+			    <c:when test="${msg == 2}">
 			    	<div class="alert alert-danger" role="alert">
-						<strong>Error!</strong> Hubo un error sintáctico, por favor intentelo nuevamente.
+						<strong>Error!</strong> Se han usado caracteres ilegales en el nombre. Por favor intentelo nuevamente.
 					</div>
 			    </c:when>
 			    <c:when test="${msg == 3}">
 			    	<div class="alert alert-danger" role="alert">
-						<strong>Error!</strong> Se ha intenado generar un indicador recursivo, por favor pruebe nuevamente.
+						<strong>Error!</strong> El nombre para el indicador ya existe. Por favor intentelo nuevamente usando otro.
 					</div>
 			    </c:when>
 			    <c:when test="${msg == 4}">
 			    	<div class="alert alert-danger" role="alert">
-						<strong>Error!</strong> Ya existe un indicador con ese nombre. Por favor elija otro.
+						<strong>Error!</strong> Se ha intentado generar un indicador recursivo, por favor pruebe nuevamente.
+					</div>
+			    </c:when>
+			    <c:when test="${msg == 5}">
+			    	<div class="alert alert-danger" role="alert">
+						<strong>Error!</strong> Hubo un error sintáctico, por favor intentelo nuevamente.
 					</div>
 			    </c:when>
 			</c:choose>

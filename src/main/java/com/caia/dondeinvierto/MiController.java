@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -332,31 +333,45 @@ public class MiController {
 			
 			if(!indicadorForm.camposVacios()){
 				
-				if(!indicadorForm.existeRecursividad()){
+				if(!indicadorForm.caracteresInvalidos()){
 					
-					if(indicadorForm.analizarSintaxis()){
+					Database indicadores = (Database) session.getAttribute("database");
+					
+					if(!indicadorForm.nombreExistente(database.getIndicadores())){
 						
-						// Indicador aceptado
-						model.addObject("msg",0);							
-						Indicador nuevoIndicador = new Indicador(indicadorForm.getNombre(),indicadorForm.getExpresion());
-		
-						database.addIndicador(nuevoIndicador);
-					
-					// Error sintactico en indicador
+						if(!indicadorForm.existeRecursividad()){
+							
+							if(indicadorForm.analizarSintaxis()){
+								
+								// Indicador aceptado
+								model.addObject("msg",0);							
+								Indicador nuevoIndicador = new Indicador(indicadorForm.getNombre(),indicadorForm.getExpresion());
+				
+								database.addIndicador(nuevoIndicador);
+							
+							// Error sintactico en indicador
+							} else {
+								model.addObject("msg",5);
+							}
+						
+						// Error indicador recursivo
+						} else {
+							model.addObject("msg",4);
+						}
+						
+					// Error nombre de indicador ya existe
 					} else {
-						model.addObject("msg",4);
+						model.addObject("msg",3);
 					}
 				
-				// Error indicador recursivo
+				// Error caracteres ilegales en el nombre
 				} else {
-					model.addObject("msg",3);
+					model.addObject("msg",2);
 				}
-			
+
 			// Error campos vacios
 			} else {
-				
 				model.addObject("msg",1);
-				
 			}
 			
 			// CONTROLAR EXISTENCIA DE NOMBRE DE INDICADORES
