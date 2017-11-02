@@ -121,7 +121,7 @@ public class MiController {
 				if(listaUsuarios.size()>0){	
 					
 					Usuario usuario = login.buscaUsuario().get(0);
-					Database database = new Database();
+					Database database = Database.getInstance();
 					
 					session.setAttribute("usuario", usuario);
 					session.setAttribute("database", database);
