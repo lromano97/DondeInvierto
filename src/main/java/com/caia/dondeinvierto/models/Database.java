@@ -8,7 +8,10 @@ public class Database {
 	private static Database instance = null;
 	ArrayList<Indicador> indicadores = new ArrayList<Indicador>();
 	ArrayList<Cotizacion> cotizaciones = new ArrayList<Cotizacion>();
-	
+	ArrayList<String> empresas = new ArrayList<String>();
+	ArrayList<String> cuentas = new ArrayList<String>();
+	ArrayList<Integer> anios = new ArrayList<Integer>();
+ 	
 	// Carga con datos del usuario
 	protected Database(){}
 	
@@ -19,12 +22,40 @@ public class Database {
 		return instance;
 	}
 	
+	public void addRow(Cotizacion unaRow){
+		cotizaciones.add(unaRow);
+	}
+	
 	public void addIndicador(Indicador unIndicador){
 		indicadores.add(unIndicador);
 	}
 	
 	public ArrayList<Indicador> getIndicadores(){
 		return indicadores;
+	}
+	
+	public ArrayList<String> getCuentas(){
+		return cuentas;
+	}
+	
+	public ArrayList<String> getEmpresas(){
+		return empresas;
+	}
+	
+	public ArrayList<Integer> getAnios() {
+		return anios;
+	}
+	
+	public void addEmpresa(String empresa) {
+		empresas.add(empresa);
+	}
+	
+	public void addCuenta(String cuenta) {
+		cuentas.add(cuenta);
+	}
+	
+	public void addAnio(int anio) {
+		anios.add(anio);
 	}
 	
 	public Cotizacion obtenerValorCuenta(String nombreCuenta, int anio) {

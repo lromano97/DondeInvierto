@@ -134,9 +134,9 @@
 								<h3 class="panel-title">Tus cuentas</h3>
 							</div>
 							<div class="panel-body">
-				              	<!-- <c:forEach items="${indicadores}" var="indicador">     
-										<button style="outline:0;" class="btn btn-success" onClick="indicadorToInput(this)"><c:out value='${indicador.getNombre()}'/></button>
-								</c:forEach> -->
+				              	<c:forEach items="${cuentas}" var="cuenta">     
+										<button style="outline:0;" class="btn btn-success" onClick="cuentaToInput(this)"><c:out value='${cuenta.getNombre()}'/></button>
+								</c:forEach>
 							</div>
 						</div>
 					</div>

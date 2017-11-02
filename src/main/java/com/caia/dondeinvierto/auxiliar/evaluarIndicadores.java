@@ -46,7 +46,7 @@ public class evaluarIndicadores{
 				if(cotizacion == null) {
 					throw new Exception("La cuenta presente en el indicador no existe en la base de datos.");
 				}
-				formula += Float.toString(cotizacion.getValor());
+				formula += Double.toString(cotizacion.getValor());
 			}else {
 				String caracterTransformado = Character.toString(caracterAEvaluar);
 				if(caracterAEvaluar == '+') {

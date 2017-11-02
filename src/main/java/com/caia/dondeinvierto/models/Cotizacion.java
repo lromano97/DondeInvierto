@@ -4,10 +4,10 @@ public class Cotizacion {
 	public Empresa empresa;
 	public Cuenta cuenta;
 	public int anio;
-	public float valor;
+	public double valor;
 	
 	// Constructor
-	public Cotizacion(Empresa _empresa, Cuenta _cuenta, int _anio, float _valor){
+	public Cotizacion(Empresa _empresa, Cuenta _cuenta, int _anio, double _valor){
 		empresa = _empresa;
 		cuenta = _cuenta;
 		anio = _anio;
@@ -27,7 +27,7 @@ public class Cotizacion {
 		return anio;
 	}
 		
-	public float getValor(){
+	public double getValor(){
 		return valor;
 	}
 	

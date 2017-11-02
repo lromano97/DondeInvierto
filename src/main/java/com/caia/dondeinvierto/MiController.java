@@ -243,7 +243,7 @@ public class MiController {
 						if(parser.csvCompleto()){
 							
 							if(parser.checkColumnTypes()){
-								
+								parser.generarRowsCSV(file);
 								model.addObject("msg", 0);
 								
 							// Error de tipos en columnas
@@ -346,7 +346,7 @@ public class MiController {
 			
 			model.addObject("command",new CrearIndicadorForm());
 			model.addObject("indicadores", database.getIndicadores());
-			
+			model.addObject("cuentas", database.getCuentas());			
 		}
 		
 		return model;

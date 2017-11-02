@@ -1,15 +1,18 @@
 package com.caia.dondeinvierto.models;
 
 public class Cuenta{
-	String nombre;
+	String nombreCuenta;
 	float valor;
 	
 	
+	public Cuenta(String nombre) {
+		nombreCuenta = nombre;
+	}
 	public String getNombre() {
-		return nombre;
+		return nombreCuenta;
 	}
 	public void setNombre(String nombre) {
-		this.nombre = nombre;
+		this.nombreCuenta = nombre;
 	}
 	public float getValor() {
 		return valor;
