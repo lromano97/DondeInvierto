@@ -86,9 +86,10 @@ public class ParserCSV {
 			}
 				
 			valor = values[3];
-			database.addCotizacion(new Cotizacion(empresa, cuenta, anio, Double.parseDouble(valor)));
-		
+			database.addCotizacion(new Cotizacion(empresa, cuenta, anio, Double.parseDouble(valor)));	
+			
 		}
+		
 	}
 	
 	public void generarRowsCSV(Database database, MultipartFile file) throws IOException {

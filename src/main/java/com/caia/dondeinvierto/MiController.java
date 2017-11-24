@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.mongodb.morphia.Morphia;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,16 +25,27 @@ import com.caia.dondeinvierto.models.Usuario;
 
 import iceblock.connection.ConnectionManager;
 
+import com.mongodb.MongoClient;
+import org.mongodb.morphia.Datastore;
+
 @Controller
 public class MiController {
 	
 	Connection conn = null;
 	
+	
 	public MiController() throws SQLException, ClassNotFoundException{
 			
+		// Conexion a DB relacional
 		ConnectionManager.create("org.hsqldb.jdbcDriver","jdbc:hsqldb:hsql://localhost/","SA","","hsqldb");
 		ConnectionManager.changeConnection("hsqldb");
 		this.conn = ConnectionManager.getConnection();
+		
+		// Conexion a MongoDB
+        MongoClient cliente = new MongoClient("localhost", 27017);
+		Datastore ds = new Morphia().createDatastore(cliente, "test1");
+		
+		
 		
 	}
 	
@@ -317,7 +328,7 @@ public class MiController {
 	
 	// Generar indicador 
 	@RequestMapping(value="generarIndicador", method = RequestMethod.POST)
-	public ModelAndView generarIndicador(HttpSession session, CrearIndicadorForm indicadorForm) {
+	public ModelAndView generarIndicador(HttpSession session, CrearIndicadorForm indicadorForm) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException, InstantiationException {
 		
 		ModelAndView model = new ModelAndView();
 		
@@ -335,7 +346,7 @@ public class MiController {
 				
 				if(!indicadorForm.caracteresInvalidos()){
 					
-					Database indicadores = (Database) session.getAttribute("database");
+					//Database indicadores = (Database) session.getAttribute("database");
 					
 					if(!indicadorForm.nombreExistente(database.getIndicadores())){
 						
@@ -344,9 +355,10 @@ public class MiController {
 							if(indicadorForm.analizarSintaxis()){
 								
 								// Indicador aceptado
-								model.addObject("msg",0);							
-								Indicador nuevoIndicador = new Indicador(indicadorForm.getNombre(),indicadorForm.getExpresion());
-				
+								model.addObject("msg",0);		
+								Usuario usuario = (Usuario) session.getAttribute("usuario");
+								Indicador nuevoIndicador = new Indicador();
+								nuevoIndicador.crearIndicador(indicadorForm.getNombre(),indicadorForm.getExpresion(),usuario);
 								database.addIndicador(nuevoIndicador);
 							
 							// Error sintactico en indicador

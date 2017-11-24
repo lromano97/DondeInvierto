@@ -44,10 +44,6 @@ public class CrearIndicadorForm {
 	
 	public boolean nombreExistente(ArrayList<Indicador> indicadores){
 		
-		System.out.println(indicadores);
-		System.out.println(indicadores.size());
-		System.out.println(indicadores.toArray());
-		
 		for(Indicador indicador : indicadores){
 			if(indicador.getNombre().equals(nombre)){
 				return true;

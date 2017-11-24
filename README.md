@@ -13,12 +13,18 @@ Scherer, Ivan 155-537.6<br />
 - [X] Sistema multiusuario.
 - [X] Parser CSV.
 - [ ] Subir CSV al server con status bar.
-- [ ] Carga de cuentas al iniciar sesion y actualizacion de estas.
-- [ ] Consulta de cuentas
+- [ ] Carga batch de cuentas desde otro servidor de archivos para todos los usuarios.
+- [ ] Traer las globales globales al usuario.
+- [ ] Consulta de cuentas.
 - [X] Error 404/500/505.
-- [ ] Consulta de estado de las cuentas.
-- [ ] Gestion de indicadores.
-- [ ] Consulta de indicadores.
 - [X] Parser de indicadores.
+- [X] Crear indicadores.
+- [ ] Traer indicadores ya creados de la DB.
+- [ ] Consulta de indicadores.
+- [ ] Precalculo de indicadores. 
+- [ ] Gestion de indicadores (Solo borrar).
+- [ ] Crear metodologias de campos dinamicos con AJAX/JSON.
+- [ ] Consulta de metodologias.
+- [ ] Gestion de metodologias (Solo borrar).
 - [ ] Salvar/Restaurar datos de formularios.
-- [ ] Ayuda al usuario.
+- [ ] Feedback al usuario al crear indicadores o metodologias.
