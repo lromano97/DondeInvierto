@@ -107,18 +107,22 @@
     			<form method="post" id="condicionesForm">
 	      				<h3>Condiciones</h3>
 	        			<div class="form-group row">
-	          				<input type="text" class="col-sm-2" placeholder="Parametro" name="parametro1[0]" value="" style="height:30px; margin:5px 5px 5px 10px;">
-	          				<select class="col-sm-2" name="comparador[0]" style="height:30px; margin:5px 5px 5px 5px;">
+	          				<input type="text" class="col-sm-2" placeholder="Parametro" name="parametro1{0}" value="" style="height:30px; margin:5px 5px 5px 10px;">
+	          				<select class="col-sm-2 miComparador" name="comparador[0]" style="height:30px; margin:5px 5px 5px 5px;">
 	            				<option value="" selected disabled>Comparador</option>
+	            				<option value="1">Igual</option>
+	            				<option value="2">Mayor</option>
+	            				<option value="3">Menor</option>
+	            				<option value="4">Constante en los años</option>
 	          				</select>
-	          				<input type="text" class="col-sm-2" placeholder="Parametro" name="parametro2[0]" value="" style="margin:5px 10px 5px 5px; height:30px;">
+	          				<input type="text" class="col-sm-2" placeholder="Parametro" name="parametro2{0}" value="" style="margin:5px 10px 5px 5px; height:30px;">
 	          				<div class="col-sm-1">
 	          					<button type="button" class="btn btn-default addButton"><i class="fa fa-plus" style="font-size:24px"></i> </button>
 	          				</div>
 	          			</div>
 	        			<div class="form-group row hide" id="condicionTemplate">
 	          				<input type="text" class="col-sm-2" placeholder="Parametro" name="parametro1" value="" style="height:30px; margin:5px 5px 5px 10px;">
-	          				<select class="col-sm-2" name="comparador" style="height:30px; margin:5px 5px 5px 5px;">
+	          				<select class="col-sm-2 miComparador" name="comparador" style="height:30px; margin:5px 5px 5px 5px;">
 	            				<option value="" selected disabled>Comparador</option>
 	          				</select>
 	          				<input type="text" class="col-sm-2" placeholder="Parametro" name="parametro2" value="" style="margin:5px 10px 5px 5px; height:30px;">
@@ -126,7 +130,7 @@
 	          					<button type="button" class="btn btn-default removeButton"><i class="fa fa-minus" style="font-size:24px"></i> </button>
 	          				</div>
 	        			</div>
-	        			 <button type="button" name="button" class="btn btn-primary" style="margin:5px 5px 5px 0px;">Crear metodologia</button>
+	        			 <button type="button" name="metodologiaCreate" class="btn btn-primary metodologiaCreate" style="margin:5px 5px 5px 0px;">Crear metodologia</button>
 	    		</form>
 			</div>	
 			<!-- jQuery -->
