@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -75,28 +77,77 @@
 				<h1>Consultar Cuenta</h1>
 				<p>Consulte las distintas cuentas que fueron cargadas por usted</p>
 			</div>
-			  <div class="container">
+			<div class="container">
 				<h3>Filtro de busqueda</h3>
-			    <form>
+				
+				<form:form action="generarConsultaCuenta.html" method="POST">
 			      <div class="form-group-sm row col-sm-4">
-			        <label for="cuenta">Cuenta</label>
-			        <select class="form-control" id="cuenta" name="" style="margin:5px 5px 5px 10px;">
-			          <option value=""></option>
-			        </select>
+			        
 			        <label for="empresa">Empresa</label>
-			        <select class="form-control" id="empresa"name="" style="margin:5px 5px 5px 10px;">
-			          <option value=""></option>
-			        </select>
+			        <form:select path="empresa" id="empresa" cssClass="form-control" style="margin:5px 5px 5px 10px;">
+							<form:option value="Todos" label="Todos"/>
+							<c:forEach items="${empresas}" var="empresa">     
+								<form:option value="${empresa}" label="${empresa}"/>
+							</c:forEach>
+					</form:select>
+			        
+			        <label for="cuenta">Cuenta</label>
+					<form:select path="cuenta" id="cuenta" cssClass="form-control" style="margin:5px 5px 5px 10px;">
+							<form:option value="Todos" label="Todos"/>
+							<c:forEach items="${cuentas}" var="cuenta">     
+								<form:option value="${cuenta}" label="${cuenta}"/>
+							</c:forEach>
+					</form:select>   
+
 			     	<label for="anio">Año</label>
-					    <select class="form-control" id="anio" name="" style="margin:5px 5px 5px 10px;">
-				  	      <option value=""></option>
-				   	    </select>
-				  	    <button type="button" name="button" class="btn btn-primary" style="margin:5px 5px 5px 10px;">Consultar</button>
+			     	<form:select path="anio" id="año" cssClass="form-control" style="margin:5px 5px 5px 10px;">
+						<form:option value="Todos" label="Todos"/>
+						<c:forEach items="${anios}" var="anio">     
+							<form:option value="${anio}" label="${anio}"/>
+						</c:forEach>
+					</form:select>
+					
+					<button class="btn btn-primary" class="submitIndicador form-control" type="submit" style="margin:5px 5px 5px 10px;">Consultar</button>
+				  
 				  </div>
-			    </form>
+			    </form:form>
 			 </div>
 			
-
+			<div class="page-header">
+				<h1>Tabla de resultados</h1>
+			</div>
+			
+			<c:choose>
+				<c:when test="${resultados.isEmpty()}">
+					<div class="alert alert-info" role="alert">
+						<strong>Que pena!</strong> No se han encontrado resultados sobre tu consulta.
+					</div>
+				</c:when>
+				<c:when test="${not(resultados.isEmpty())}">
+					
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Empresa</th>
+								<th>Cuenta</th>
+								<th>Año</th>
+								<th>Valor</th>
+							</tr>
+						</thead>
+						<tbody>
+						<c:forEach items="${resultados}" var="resultado">     
+						  	<tr>
+				                <td><c:out value="${(resultado.getEmpresa()).getNombreEmpresa()}"/></td>
+				                <td><c:out value="${(resultado.cuenta).getNombre()}"/></td>
+				                <td><c:out value="${resultado.getAnio()}"/></td>
+				                <td><c:out value="${resultado.getValor()}"/></td>
+			              	</tr>
+						</c:forEach>
+						</tbody>
+					</table>		
+				
+				</c:when>
+			</c:choose>
 			<!-- jQuery -->
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 			<!-- Bootstrap js -->

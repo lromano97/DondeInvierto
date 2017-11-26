@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.caia.dondeinvierto.auxiliar.ParserCSV;
 import com.caia.dondeinvierto.forms.*;
+import com.caia.dondeinvierto.models.Cotizacion;
 import com.caia.dondeinvierto.models.Database;
 import com.caia.dondeinvierto.models.Indicador;
 import com.caia.dondeinvierto.models.Usuario;
@@ -413,6 +415,7 @@ public class MiController {
 		
 	}
 	
+	// Ir a consultar cuenta
 	@RequestMapping(value="consultarCuenta", method={RequestMethod.GET})
 	public ModelAndView irAConsultarCuenta(HttpSession session){
 		
@@ -427,16 +430,63 @@ public class MiController {
 		} else {
 			
 			Usuario usuario = (Usuario) session.getAttribute("usuario");
-				
+			
 			model.setViewName("consultarCuenta");
 			model.addObject("usuario",usuario);
 			
+			Database database = (Database) session.getAttribute("database");
+			
+			model.addObject("empresas",database.getEmpresas());
+			model.addObject("cuentas",database.getCuentas());
+			model.addObject("anios",database.getAnios());
+			
+			ArrayList<Cotizacion> resultados = new ArrayList<Cotizacion>();
+			model.addObject("resultados",resultados);
+		
+			model.addObject("command",new FiltroConsultaCuenta());
+						
 		}
 		
 		return model;
 		
 	}
 	
+	// Generar consulta cuenta 
+	@RequestMapping(value="generarConsultaCuenta", method=RequestMethod.POST)
+	public ModelAndView generarConsultaCuenta(HttpSession session, FiltroConsultaCuenta filtroConsulta) {		
+		
+		System.out.println("pase");
+		
+		ModelAndView model = new ModelAndView();
+			
+		if(session.getAttribute("usuario") == null){
+			model.setViewName("login");
+			model.addObject("command",new LoginForm());
+		} else {
+
+			Usuario usuario = (Usuario) session.getAttribute("usuario");
+			
+			model.setViewName("consultarCuenta");
+			model.addObject("command",new FiltroConsultaCuenta());
+			
+			model.addObject("usuario",usuario);
+			
+			Database database = (Database) session.getAttribute("database");
+			
+			model.addObject("empresas",database.getEmpresas());
+			model.addObject("cuentas",database.getCuentas());
+			model.addObject("anios",database.getAnios());
+			
+			ArrayList<Cotizacion> resultados = database.generarConsultaCuenta(filtroConsulta);
+			model.addObject("resultados", resultados);
+			
+		}
+			
+		return model;
+			
+	}
+	
+	// Ir a consultar indicador
 	@RequestMapping(value="consultarIndicador", method={RequestMethod.GET})
 	public ModelAndView irAConsultarIndicador(HttpSession session){
 		
@@ -460,6 +510,8 @@ public class MiController {
 		return model;
 		
 	}
+	
+	// Ir a consultar metodologia
 	@RequestMapping(value="consultarMetodologia", method={RequestMethod.GET})
 	public ModelAndView irAConsultarMetodologia(HttpSession session){
 		
@@ -484,6 +536,7 @@ public class MiController {
 		
 	}
 	
+	// Ir a gestion de metodologias
 	@RequestMapping(value="gestionMetodologias", method={RequestMethod.GET})
 	public ModelAndView irAMetodologia(HttpSession session){
 		

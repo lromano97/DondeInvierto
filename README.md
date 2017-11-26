@@ -13,9 +13,10 @@ Scherer, Ivan 155-537.6<br />
 - [X] Sistema multiusuario.
 - [X] Parser CSV.
 - [ ] Subir CSV al server con status bar.
+- [ ] Persistir CSV en DB Relacional(Cuentas).
 - [ ] Carga batch de cuentas desde otro servidor de archivos para todos los usuarios.
-- [ ] Traer las globales globales al usuario.
-- [ ] Consulta de cuentas.
+- [ ] Guardar las cuentas globales en la sesion del usuario (mismas para todos).
+- [X] Consulta de cuentas.
 - [X] Error 404/500/505.
 - [X] Parser de indicadores.
 - [X] Crear indicadores.
