@@ -62,9 +62,9 @@ public class MiController {
 		//Datastore ds = new Morphia().createDatastore(cliente, "test1");
 		
 		// Ivan scheduler
-		//Timer time = new Timer();		
-		//ScheduledTask st = new ScheduledTask(session);
-		//time.schedule(st, 60000, 120000); // Empieza al minuto y se repite cada 2 minutos
+		Timer time = new Timer();		
+		ScheduledTask st = new ScheduledTask();
+		time.schedule(st, 60000, 120000); // Empieza al minuto y se repite cada 2 minutos
 		
 	}
 	
