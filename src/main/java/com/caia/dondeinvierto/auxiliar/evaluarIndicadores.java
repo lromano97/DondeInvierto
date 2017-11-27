@@ -1,8 +1,8 @@
 package com.caia.dondeinvierto.auxiliar;
 
 import com.caia.dondeinvierto.models.Cotizacion;
+import com.caia.dondeinvierto.models.DBCotizacion;
 import com.caia.dondeinvierto.models.DBSession;
-import com.caia.dondeinvierto.models.Empresa;
 import com.caia.dondeinvierto.models.Indicador;
 import java.util.regex.Pattern;
 
@@ -28,8 +28,8 @@ public class evaluarIndicadores{
 		return nombreIndicador;
 	}
 
-	public String generarFormula(String nombreIndicador, int anio, Empresa empresa) throws Exception {
-		Indicador indicadorAEvaluar = DBSession.getInstance().obtenerIndicador(nombreIndicador);
+	public String generarFormula(String nombreIndicador, int anio, String empresa, DBSession dbsession) throws Exception {
+		Indicador indicadorAEvaluar = dbsession.obtenerIndicador(nombreIndicador);
 		if(indicadorAEvaluar == null) {
 			throw new Exception("El indicador elegido no se encuentra cargado en la base de datos.");
 		}
@@ -38,11 +38,11 @@ public class evaluarIndicadores{
 			char caracterAEvaluar = indicadorAEvaluar.getExpresion().charAt(posicion);
 				if(caracterAEvaluar == '#') {
 				String nombreSubIndicador = obtenerNombre(indicadorAEvaluar.getExpresion(), posicion);
-				String formulaDeIndicador = generarFormula(nombreSubIndicador, anio, empresa);
+				String formulaDeIndicador = generarFormula(nombreSubIndicador, anio, empresa, dbsession);
 				formula += formulaDeIndicador;
 			}else if(caracterAEvaluar == '$') {
 				String nombreCuenta = obtenerNombre(indicadorAEvaluar.getExpresion(), posicion);
-				Cotizacion cotizacion = DBSession.getInstance().obtenerValorCuenta(nombreCuenta, anio);
+				Cotizacion cotizacion = DBCotizacion.getInstance().obtenerValorCuenta(empresa, nombreCuenta, anio);
 				if(cotizacion == null) {
 					throw new Exception("La cuenta presente en el indicador no existe en la base de datos.");
 				}

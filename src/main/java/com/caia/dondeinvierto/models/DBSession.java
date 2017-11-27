@@ -23,6 +23,15 @@ public class DBSession {
 		return indicadores;
 	}
 	
+	public Indicador obtenerIndicador(String nombreIndicador) {
+		for(Indicador indi : indicadores) {
+			if(indi.getNombre().equals(nombreIndicador)) {
+				return indi;
+			}
+		}
+		return null;
+	}
+	
 	/*
 	public Cotizacion obtenerValorCuenta(String nombreCuenta, int anio) {
 

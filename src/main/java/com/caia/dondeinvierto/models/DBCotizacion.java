@@ -131,6 +131,16 @@ public class DBCotizacion {
 		return resultados;
 		
 	}
+	
+	
+	public Cotizacion obtenerValorCuenta(String empresa, String nombreCuenta, int anio) {
+		for(Cotizacion coti : cotizaciones) {
+			if(coti.getCuenta().equals(nombreCuenta) && coti.getAnio()== anio && coti.getEmpresa().equals(empresa)) {
+				return coti;
+			}
+		}
+		return null;
+	}
 
 	
 }
