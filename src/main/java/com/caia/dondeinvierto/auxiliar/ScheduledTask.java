@@ -15,13 +15,6 @@ import org.apache.commons.net.ftp.FTPReply;
 import com.caia.dondeinvierto.models.DBCotizacion;
 
 public class ScheduledTask extends TimerTask {
-
-	HttpSession session;
-	
-	public ScheduledTask(HttpSession unSession){
-		this.session = unSession;
-	}
-
 	public void run() {
 		FTPClient client = new FTPClient();
 		String sFTP = "ftp.byethost22.com";
