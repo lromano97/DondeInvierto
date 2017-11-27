@@ -1,11 +1,14 @@
 package com.caia.dondeinvierto;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -32,6 +35,10 @@ import com.caia.dondeinvierto.models.Usuario;
 import iceblock.connection.ConnectionManager;
 
 import com.mongodb.MongoClient;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
 import org.mongodb.morphia.Datastore;
 
 @Controller
@@ -53,6 +60,59 @@ public class MiController {
 		
 		
 		
+	}
+	
+	public class ScheduledTask extends TimerTask {
+
+		HttpSession session;
+		
+		ScheduledTask(HttpSession unSession){
+			this.session = unSession;
+		}
+
+		public void run() {
+			FTPClient client = new FTPClient();
+			String sFTP = "ftp.byethost22.com";
+			String sUser = "b22_21124567";
+			String sPassword = "caiasamanta";
+			try {
+				client.setAutodetectUTF8(true);
+				client.connect(sFTP);
+				client.login(sUser,sPassword);
+				client.enterLocalPassiveMode();
+				int respuesta = client.getReplyCode();
+
+		        if(FTPReply.isPositiveCompletion(respuesta) == true ) {
+		                
+		        	String archivo = "/htdocs/data.csv";
+		        	InputStream is = client.retrieveFileStream(archivo);	
+		        	byte[] bytes = IOUtils.toByteArray(is);		   
+		        	ParserCSV parser = new ParserCSV(bytes);
+					
+					if(!parser.csvEsVacio()){
+					
+						if(parser.csvCompleto()){
+							
+							if(parser.checkColumnTypes()){
+								
+								Database database = (Database) session.getAttribute("database");
+								
+								parser.generarRowsCSVTask(database,bytes);
+								
+							}
+						}
+					} 
+					
+					is.close();
+		        }
+		
+				client.logout();
+				client.disconnect();
+			}
+			catch(IOException ioe) {
+				ioe.printStackTrace();
+			}       	
+		} 	
 	}
 	
 	// Redirige a formulario login
@@ -146,6 +206,10 @@ public class MiController {
 					
 					model.setViewName("inicio");
 					model.addObject("usuario", usuario);
+					
+					Timer time = new Timer();		
+					ScheduledTask st = new ScheduledTask(session);
+					time.schedule(st, 60000, 120000); // Empieza al minuto y se repite cada 2 minutos
 												
 				// Error usuario no corresponde
 				} else {

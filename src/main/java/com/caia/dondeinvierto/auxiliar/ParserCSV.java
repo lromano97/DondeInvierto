@@ -22,6 +22,26 @@ public class ParserCSV {
 		
 	}
 	
+	public ParserCSV(byte[] bytes) throws IOException{
+		
+		String data = openFileToString(bytes);
+		String[] filasData = data.split("#");
+		this.filasString = filasData[0].split("\n");
+		
+	}
+	
+	public String openFileToString(byte[] _bytes)
+	{
+	    String file_string = "";
+
+	    for(int i = 0; i < _bytes.length; i++)
+	    {
+	        file_string += (char)_bytes[i];
+	    }
+
+	    return file_string;    
+	}
+	
 	public boolean csvEsVacio(){
 		return filasString.length == 0;
 	}
@@ -90,6 +110,20 @@ public class ParserCSV {
 			
 		}
 		
+	}
+	
+	public void generarRowsCSVTask(Database database, byte[] bytes) throws IOException {
+		String completeData = new String(bytes);
+		String[] rowsFile = completeData.split("#");
+		String fileStream = rowsFile[0];
+		
+		String[] rowsCSV = fileStream.split("\n");
+		
+		for(int i = 0; i < rowsCSV.length; i++){
+			rowsCSV[i] = rowsCSV[i].replaceAll("[\n\r]","");
+		}
+		
+		cargarCSV(database, rowsCSV);
 	}
 	
 	public void generarRowsCSV(Database database, MultipartFile file) throws IOException {
