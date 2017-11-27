@@ -12,6 +12,8 @@ import javax.servlet.http.HttpSession;
 
 import org.mongodb.morphia.Morphia;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,9 +22,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.caia.dondeinvierto.auxiliar.ParserCSV;
 import com.caia.dondeinvierto.forms.*;
+import com.caia.dondeinvierto.models.Condicion;
 import com.caia.dondeinvierto.models.Cotizacion;
 import com.caia.dondeinvierto.models.Database;
 import com.caia.dondeinvierto.models.Indicador;
+import com.caia.dondeinvierto.models.Metodologia;
 import com.caia.dondeinvierto.models.Usuario;
 
 import iceblock.connection.ConnectionManager;
@@ -560,5 +564,42 @@ public class MiController {
 		return model;
 		
 	}
+	
+	 public String index(
+	            ModelMap map, 
+	            HttpSession session, 
+	            HttpServletRequest request, 
+	            @RequestParam(value="f", required=false) String flush,
+	            @RequestParam(value="message", required=false) String message ) {
+	 
+	        if( flush != null )
+	            session.setAttribute("metodologia", getDummyMetodologia());
+	        if( session.getAttribute("metodologia") == null )
+	            session.setAttribute("metodologia", getDummyMetodologia());
+	        map.addAttribute("metodologia", (Metodologia)session.getAttribute("metodologia"));
+	        if( message != null )
+	            map.addAttribute("message", message);
+	        map.addAttribute("cp", request.getContextPath());
+	 
+	        return "index";
+	    }
+	 
+	    @RequestMapping(value="/editpersonlistcontainer", method= RequestMethod.POST)
+	    public String editpersonListContainer(@ModelAttribute Metodologia metodologia, HttpSession session) {
+	        for( Condicion p : metodologia.getCondiciones() ) {
+	            //System.out.println("Name: " + p.getName());
+	            //System.out.println("Age: " + p.getAge());
+	        }
+	        session.setAttribute("personListContainer",metodologia);
+	        return "redirect:/?message=Form Submitted Ok. Number of rows is: ["+metodologia.getCondiciones().size()+"]";
+	    }
+	 
+	    private Metodologia getDummyMetodologia() {
+	        List<Condicion> condiciones = new ArrayList<Condicion>();
+	        for( int i=0; i<5; i++ ) {
+	            condiciones.add( new Condicion());
+	        }
+	        return new Metodologia();
+	    }
 }
 

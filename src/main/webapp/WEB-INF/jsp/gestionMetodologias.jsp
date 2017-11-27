@@ -103,36 +103,48 @@
 			<div class="container">
 				<div class="row">
       				<input type="text" class="col-sm-2" name="" value="" placeholder="Nombre" style="margin:5px 5px 5px 10px; height:30px;">
+      				<input type="text" id="cantidadCondiciones" class="col-sm-2 conditionsAmount" placeholder="Cantidad de condiciones" style="height:30px; margin:5px 5px 5px 10px;">
+                   	<button type="button" name="metodologiaCreate" class="btn btn-primary" id="botonCondiciones" style="margin:3px 0 0 10px;">Generar condiciones</button>
     			</div>
-    			<form method="post" id="condicionesForm">
-	      				<h3>Condiciones</h3>
-	        			<div class="form-group row">
-	          				<input type="text" class="col-sm-2" placeholder="Parametro" name="parametro1{0}" value="" style="height:30px; margin:5px 5px 5px 10px;">
-	          				<select class="col-sm-2 miComparador" name="comparador[0]" style="height:30px; margin:5px 5px 5px 5px;">
-	            				<option value="" selected disabled>Comparador</option>
-	            				<option value="1">Igual</option>
-	            				<option value="2">Mayor</option>
-	            				<option value="3">Menor</option>
-	            				<option value="4">Constante en los años</option>
-	          				</select>
-	          				<input type="text" class="col-sm-2" placeholder="Parametro" name="parametro2{0}" value="" style="margin:5px 10px 5px 5px; height:30px;">
-	          				<div class="col-sm-1">
-	          					<button type="button" class="btn btn-default addButton"><i class="fa fa-plus" style="font-size:24px"></i> </button>
-	          				</div>
-	          			</div>
-	        			<div class="form-group row hide" id="condicionTemplate">
-	          				<input type="text" class="col-sm-2" placeholder="Parametro" name="parametro1" value="" style="height:30px; margin:5px 5px 5px 10px;">
-	          				<select class="col-sm-2 miComparador" name="comparador" style="height:30px; margin:5px 5px 5px 5px;">
-	            				<option value="" selected disabled>Comparador</option>
-	          				</select>
-	          				<input type="text" class="col-sm-2" placeholder="Parametro" name="parametro2" value="" style="margin:5px 10px 5px 5px; height:30px;">
-	          				<div class="col-sm-1">
-	          					<button type="button" class="btn btn-default removeButton"><i class="fa fa-minus" style="font-size:24px"></i> </button>
-	          				</div>
-	        			</div>
-	        			 <button type="button" name="metodologiaCreate" class="btn btn-primary metodologiaCreate" style="margin:5px 5px 5px 0px;">Crear metodologia</button>
-	    		</form>
+	    		<form method="post" style="display:none;" id="condicionesForm">
+		    		 <div id="claseCondiciones">
+                   		 	<h3>Condiciones</h3>
+                   		 	<hr>
+                   	</div>
+		    	</form>
 			</div>	
+			
+			<script>
+			$(document).click(function(){
+				$("#botonCondiciones").click(function(){
+					$("#botonCondiciones").hide();
+					$("#cantidadCondiciones").hide();
+					var miDiv = document.getElementById("botonCondiciones");
+					var amountConditions = $("#cantidadCondiciones").val();
+					$("#condicionesForm").show();
+					var form = document.getElementById('condicionesForm');
+					var i = 0;
+					for(i; i<amountConditions; i++){
+						var createDiv = document.createElement('div');
+						form.appendChild(createDiv);
+						createDiv.innerHTML = '<input type="text" class="col-sm-2" placeholder="Parametro" name="parametro1" value="" style="height:30px; margin:5px 5px 5px 10px;">'+
+							'<select class="col-sm-2 miComparador" id="cmp{'+i+'}"name="comparador{'+i+'}" style="height:30px; margin:5px 5px 5px 5px;">'+
+				    	'<option value="" selected disabled>Comparador</option>'+    
+				    	'<option value="1">Igual</option>'+
+					    	'<option value="2">Mayor</option>'+       				
+					    	'<option value="3">Menor</option>'+       				
+					    	'<option value="4">Constante en los años</option>'+        				
+					    	'</select>';
+					    	var lastParameter = '<input type="text" class="col-sm-2" placeholder="Parametro" name="parametro2{'+i+'}" style="margin:5px 10px 5px 5px; height:30px;">';
+					    createDiv.innerHTML += lastParameter;
+					    createDiv.classList.add("form-group");
+					    createDiv.classList.add("row");
+						form.appendChild(createDiv);
+
+					}
+				});
+			});
+			</script>
 			<!-- jQuery -->
 			<script src="resources/js/autocompleteIndicador.js"></script>
 			<script src="resources/js/addingConditions.js"></script>
