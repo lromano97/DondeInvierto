@@ -1,34 +1,77 @@
 package com.caia.dondeinvierto.models;
 
+import iceblock.ann.*;
+
+@Table(name="cotizacion")
 public class Cotizacion {
-	private Empresa empresa;
-	private Cuenta cuenta;
-	private int anio;
+	
+	@Id(strategy=Id.ASSIGMENT)
+	@Column(name="id_cotizacion")
+	private Integer idCotizacion = 0;
+	
+	@Column(name="empresa")
+	private String empresa;
+	
+	@Column(name="cuenta")
+	private String cuenta;
+	
+	@Column(name="anio")
+	private Integer anio;
+	
+	@Column(name="valor")
 	private double valor;
 	
 	// Constructor
-	public Cotizacion(Empresa _empresa, Cuenta _cuenta, int _anio, double _valor){
+	public Cotizacion crearCotizacion(String _empresa, String _cuenta, int _anio, double _valor){
+		System.out.println(_empresa);
 		empresa = _empresa;
 		cuenta = _cuenta;
 		anio = _anio;
 		valor = _valor;
-	}
 		
-	// Getters
-	public Empresa getEmpresa(){
+		return this;
+	}
+
+	public Integer getIdCotizacion() {
+		return idCotizacion;
+	}
+
+	public void setIdCotizacion(Integer idCotizacion) {
+		this.idCotizacion = idCotizacion;
+	}
+
+	public String getEmpresa() {
 		return empresa;
 	}
-		
-	public Cuenta getCuenta(){
+
+	public void setEmpresa(String empresa) {
+		this.empresa = empresa;
+	}
+
+	public String getCuenta() {
 		return cuenta;
-	}	
-		
-	public int getAnio(){
+	}
+
+	public void setCuenta(String cuenta) {
+		this.cuenta = cuenta;
+	}
+
+	public Integer getAnio() {
 		return anio;
 	}
-		
-	public double getValor(){
+
+	public void setAnio(Integer anio) {
+		this.anio = anio;
+	}
+
+	public double getValor() {
 		return valor;
 	}
+
+	public void setValor(double valor) {
+		this.valor = valor;
+	}
+	
+	
 	
 }

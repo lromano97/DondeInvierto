@@ -149,8 +149,8 @@
 			            <tbody>
 				        <c:forEach items="${cotizaciones}" var="cotizacion">     
 						  	<tr>
-				                <td><c:out value="${(cotizacion.getEmpresa()).getNombreEmpresa()}"/></td>
-				                <td><c:out value="${(cotizacion.getCuenta()).getNombre()}"/></td>
+				                <td><c:out value="${cotizacion.getEmpresa()}"/></td>
+				                <td><c:out value="${cotizacion.getCuenta()}"/></td>
 				                <td><c:out value="${cotizacion.getAnio()}"/></td>
 				                <td><c:out value="${cotizacion.getValor()}"/></td>
 			              	</tr>

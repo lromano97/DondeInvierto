@@ -137,8 +137,8 @@
 						<tbody>
 						<c:forEach items="${resultados}" var="resultado">     
 						  	<tr>
-				                <td><c:out value="${(resultado.getEmpresa()).getNombreEmpresa()}"/></td>
-				                <td><c:out value="${(resultado.cuenta).getNombre()}"/></td>
+				                <td><c:out value="${resultado.getEmpresa()}"/></td>
+				                <td><c:out value="${resultado.getCuenta()}"/></td>
 				                <td><c:out value="${resultado.getAnio()}"/></td>
 				                <td><c:out value="${resultado.getValor()}"/></td>
 			              	</tr>

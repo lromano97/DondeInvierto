@@ -18,10 +18,14 @@ public class Indicador {
 	@OneToOne(name="id_usuario", fetchType=OneToOne.EAGER)
 	private Usuario usuario;
 	
-	public void crearIndicador(String nombre, String expresion,Usuario usuario){
+	// Constructor
+	public Indicador crearIndicador(String nombre, String expresion,Usuario usuario){
 		this.setNombre(nombre);
 		this.setExpresion(expresion);
 		this.setUsuario(usuario);
+		
+		return this;
+		
 	}
 
 	public Integer getIdIndicador() {
@@ -55,7 +59,5 @@ public class Indicador {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
-	
-
 	
 }

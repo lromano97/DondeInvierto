@@ -1,14 +1,14 @@
 package com.caia.dondeinvierto.auxiliar;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.regex.Pattern;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.caia.dondeinvierto.models.Cotizacion;
-import com.caia.dondeinvierto.models.Cuenta;
-import com.caia.dondeinvierto.models.Database;
-import com.caia.dondeinvierto.models.Empresa;
+import com.caia.dondeinvierto.models.DBCotizacion;
 
 public class ParserCSV {
 
@@ -78,41 +78,43 @@ public class ParserCSV {
 		
 	}
 	
-	public void cargarCSV(Database database, String rowsCSV[]) {
+	public void cargarCSV(DBCotizacion dbCotizacion, String rowsCSV[]) throws NumberFormatException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, SQLException {
 		String[] values;
-		Empresa empresa;
-		Cuenta cuenta;
+		String empresa;
+		String cuenta;
 		Integer anio;
 		String valor;
 		for(int i=0; i < rowsCSV.length; i++){
 			
 			values = rowsCSV[i].split(",");
-			empresa = new Empresa(values[0]);
+			empresa = values[0];
 			
-			if (!database.getEmpresas().contains(empresa.getNombreEmpresa())){
-				database.addEmpresa(empresa.getNombreEmpresa());
+			if (!dbCotizacion.getEmpresas().contains(empresa)){
+				dbCotizacion.addEmpresa(empresa);
 			}
 				
-			cuenta = new Cuenta(values[1]);
+			cuenta = values[1];
 				
-			if(!database.getCuentas().contains(cuenta.getNombre())){
-				database.addCuenta(cuenta.getNombre());
+			if(!dbCotizacion.getCuentas().contains(cuenta)){
+				dbCotizacion.addCuenta(cuenta);
 			}
 				
 			anio = Integer.parseInt(values[2]);
 				
-			if(!database.getAnios().contains(anio)){
-				database.addAnio(anio);
+			if(!dbCotizacion.getAnios().contains(anio)){
+				dbCotizacion.addAnio(anio);
 			}
 				
 			valor = values[3];
-			database.addCotizacion(new Cotizacion(empresa, cuenta, anio, Double.parseDouble(valor)));	
+			
+			Cotizacion unaCotizacion = new Cotizacion();
+			dbCotizacion.addCotizacion(unaCotizacion.crearCotizacion(empresa, cuenta, anio, Double.parseDouble(valor)));	
 			
 		}
 		
 	}
 	
-	public void generarRowsCSVTask(Database database, byte[] bytes) throws IOException {
+	public void generarRowsCSVTask(DBCotizacion dbCotizacion, byte[] bytes) throws IOException, NumberFormatException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, SQLException {
 		String completeData = new String(bytes);
 		String[] rowsFile = completeData.split("#");
 		String fileStream = rowsFile[0];
@@ -123,10 +125,10 @@ public class ParserCSV {
 			rowsCSV[i] = rowsCSV[i].replaceAll("[\n\r]","");
 		}
 		
-		cargarCSV(database, rowsCSV);
+		this.cargarCSV(dbCotizacion, rowsCSV);
 	}
 	
-	public void generarRowsCSV(Database database, MultipartFile file) throws IOException {
+	public void generarRowsCSV(DBCotizacion dbCotizacion, MultipartFile file) throws IOException, NumberFormatException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, SQLException {
 		byte[] bytes = file.getBytes();
 		String completeData = new String(bytes);
 		String[] rowsFile = completeData.split("#");
@@ -138,7 +140,7 @@ public class ParserCSV {
 			rowsCSV[i] = rowsCSV[i].replaceAll("[\n\r]","");
 		}
 		
-		cargarCSV(database, rowsCSV);
+		this.cargarCSV(dbCotizacion, rowsCSV);
 	}
 	
 	private boolean esEmpresa(String x){

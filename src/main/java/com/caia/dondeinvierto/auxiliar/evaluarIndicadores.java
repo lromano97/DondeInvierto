@@ -1,7 +1,7 @@
 package com.caia.dondeinvierto.auxiliar;
 
 import com.caia.dondeinvierto.models.Cotizacion;
-import com.caia.dondeinvierto.models.Database;
+import com.caia.dondeinvierto.models.DBSession;
 import com.caia.dondeinvierto.models.Empresa;
 import com.caia.dondeinvierto.models.Indicador;
 import java.util.regex.Pattern;
@@ -29,7 +29,7 @@ public class evaluarIndicadores{
 	}
 
 	public String generarFormula(String nombreIndicador, int anio, Empresa empresa) throws Exception {
-		Indicador indicadorAEvaluar = Database.getInstance().obtenerIndicador(nombreIndicador);
+		Indicador indicadorAEvaluar = DBSession.getInstance().obtenerIndicador(nombreIndicador);
 		if(indicadorAEvaluar == null) {
 			throw new Exception("El indicador elegido no se encuentra cargado en la base de datos.");
 		}
@@ -42,7 +42,7 @@ public class evaluarIndicadores{
 				formula += formulaDeIndicador;
 			}else if(caracterAEvaluar == '$') {
 				String nombreCuenta = obtenerNombre(indicadorAEvaluar.getExpresion(), posicion);
-				Cotizacion cotizacion = Database.getInstance().obtenerValorCuenta(nombreCuenta, anio);
+				Cotizacion cotizacion = DBSession.getInstance().obtenerValorCuenta(nombreCuenta, anio);
 				if(cotizacion == null) {
 					throw new Exception("La cuenta presente en el indicador no existe en la base de datos.");
 				}

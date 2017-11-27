@@ -12,17 +12,16 @@ Scherer, Ivan 155-537.6<br />
 - [X] Sistema de login.
 - [X] Sistema multiusuario.
 - [X] Parser CSV.
-- [ ] Subir CSV al server con status bar.
-- [ ] Persistir CSV en DB Relacional(Cuentas).
-- [ ] Carga batch de cuentas desde otro servidor de archivos para todos los usuarios.
-- [ ] Guardar las cuentas globales en la sesion del usuario (mismas para todos).
+- [X] Persistir CSV en DB Relacional(Cuentas).
+- [X] Carga batch de cuentas desde otro servidor de archivos para todos los usuarios.
+- [X] Guardar las cuentas de manera global usuario (mismas para todos).
 - [X] Consulta de cuentas.
 - [X] Error 404/500/505.
 - [X] Parser de indicadores.
 - [X] Crear indicadores.
 - [ ] Traer indicadores ya creados de la DB.
-- [ ] Consulta de indicadores.
-- [ ] Precalculo de indicadores. 
+- [ ] Consulta de indicadores con MondoDB.
+- [ ] Precalculo de indicadores con MongoDB. 
 - [ ] Gestion de indicadores (Solo borrar).
 - [ ] Crear metodologias de campos dinamicos con AJAX/JSON.
 - [ ] Consulta de metodologias.

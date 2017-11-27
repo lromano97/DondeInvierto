@@ -1,14 +1,12 @@
 package com.caia.dondeinvierto;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -24,10 +22,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.caia.dondeinvierto.auxiliar.ParserCSV;
+import com.caia.dondeinvierto.auxiliar.ScheduledTask;
 import com.caia.dondeinvierto.forms.*;
 import com.caia.dondeinvierto.models.Condicion;
 import com.caia.dondeinvierto.models.Cotizacion;
-import com.caia.dondeinvierto.models.Database;
+import com.caia.dondeinvierto.models.DBCotizacion;
+import com.caia.dondeinvierto.models.DBSession;
 import com.caia.dondeinvierto.models.Indicador;
 import com.caia.dondeinvierto.models.Metodologia;
 import com.caia.dondeinvierto.models.Usuario;
@@ -45,74 +45,27 @@ import org.mongodb.morphia.Datastore;
 public class MiController {
 	
 	Connection conn = null;
+	DBCotizacion dbCotizacion = null;
 	
-	
-	public MiController() throws SQLException, ClassNotFoundException{
+	public MiController() throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException{
 			
 		// Conexion a DB relacional
 		ConnectionManager.create("org.hsqldb.jdbcDriver","jdbc:hsqldb:hsql://localhost/","SA","","hsqldb");
 		ConnectionManager.changeConnection("hsqldb");
+		
 		this.conn = ConnectionManager.getConnection();
+		this.dbCotizacion = DBCotizacion.getInstance();
+		this.dbCotizacion.update();
 		
 		// Conexion a MongoDB
-        MongoClient cliente = new MongoClient("localhost", 27017);
-		Datastore ds = new Morphia().createDatastore(cliente, "test1");
+        //MongoClient cliente = new MongoClient("localhost", 27017);
+		//Datastore ds = new Morphia().createDatastore(cliente, "test1");
 		
+		// Ivan scheduler
+		//Timer time = new Timer();		
+		//ScheduledTask st = new ScheduledTask(session);
+		//time.schedule(st, 60000, 120000); // Empieza al minuto y se repite cada 2 minutos
 		
-		
-	}
-	
-	public class ScheduledTask extends TimerTask {
-
-		HttpSession session;
-		
-		ScheduledTask(HttpSession unSession){
-			this.session = unSession;
-		}
-
-		public void run() {
-			FTPClient client = new FTPClient();
-			String sFTP = "ftp.byethost22.com";
-			String sUser = "b22_21124567";
-			String sPassword = "caiasamanta";
-			try {
-				client.setAutodetectUTF8(true);
-				client.connect(sFTP);
-				client.login(sUser,sPassword);
-				client.enterLocalPassiveMode();
-				int respuesta = client.getReplyCode();
-
-		        if(FTPReply.isPositiveCompletion(respuesta) == true ) {
-		                
-		        	String archivo = "/htdocs/data.csv";
-		        	InputStream is = client.retrieveFileStream(archivo);	
-		        	byte[] bytes = IOUtils.toByteArray(is);		   
-		        	ParserCSV parser = new ParserCSV(bytes);
-					
-					if(!parser.csvEsVacio()){
-					
-						if(parser.csvCompleto()){
-							
-							if(parser.checkColumnTypes()){
-								
-								Database database = (Database) session.getAttribute("database");
-								
-								parser.generarRowsCSVTask(database,bytes);
-								
-							}
-						}
-					} 
-					
-					is.close();
-		        }
-		
-				client.logout();
-				client.disconnect();
-			}
-			catch(IOException ioe) {
-				ioe.printStackTrace();
-			}       	
-		} 	
 	}
 	
 	// Redirige a formulario login
@@ -199,18 +152,16 @@ public class MiController {
 				if(listaUsuarios.size()>0){	
 					
 					Usuario usuario = login.buscaUsuario().get(0);
-					Database database = new Database();
+					
+					DBSession dbSession = new DBSession();
 					
 					session.setAttribute("usuario", usuario);
-					session.setAttribute("database", database);
+					session.setAttribute("dbSession", dbSession);
 					
 					model.setViewName("inicio");
 					model.addObject("usuario", usuario);
-					
-					Timer time = new Timer();		
-					ScheduledTask st = new ScheduledTask(session);
-					time.schedule(st, 60000, 120000); // Empieza al minuto y se repite cada 2 minutos
-												
+					model.addObject("cotizaciones",dbCotizacion.getCotizaciones());
+				
 				// Error usuario no corresponde
 				} else {
 					
@@ -257,13 +208,11 @@ public class MiController {
 		} else {
 			
 			Usuario usuario = (Usuario) session.getAttribute("usuario");
-			
-			Database database = (Database) session.getAttribute("database");
-			
+						
 			model.setViewName("inicio");
 			model.addObject("usuario",usuario);
 			
-			model.addObject("cotizaciones",database.getCotizaciones());
+			model.addObject("cotizaciones",dbCotizacion.getCotizaciones());
 			
 		}
 		
@@ -308,7 +257,7 @@ public class MiController {
 	
 	// Generar proyecto 
 	@RequestMapping(value="generarProyecto", method = RequestMethod.POST)
-	public ModelAndView generarProyecto(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpSession session) {
+	public ModelAndView generarProyecto(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpSession session) throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, SQLException {
 		
 		ModelAndView model = new ModelAndView();
 						
@@ -329,10 +278,8 @@ public class MiController {
 						if(parser.csvCompleto()){
 							
 							if(parser.checkColumnTypes()){
-								
-								Database database = (Database) session.getAttribute("database");
-								
-								parser.generarRowsCSV(database,file);
+																
+								parser.generarRowsCSV(DBCotizacion.getInstance(),file);
 								model.addObject("msg", 0);
 								
 							// Error de tipos en columnas
@@ -382,13 +329,13 @@ public class MiController {
 			model.addObject("command",new LoginForm());
 		} else {
 			
-			Database database = (Database) session.getAttribute("database");
+			DBSession dbSession = (DBSession) session.getAttribute("dbSession");
 			
 			model.setViewName("gestionIndicadores");
 			model.addObject("command",new CrearIndicadorForm());	
 			
-			model.addObject("indicadores",database.getIndicadores());	
-			model.addObject("cuentas",database.getCuentas());	
+			model.addObject("indicadores",dbSession.getIndicadores());	
+			model.addObject("cuentas",dbCotizacion.getCuentas());	
 			
 		}
 		
@@ -410,15 +357,13 @@ public class MiController {
 			model.setViewName("gestionIndicadores");
 			model.addObject("command",new CrearIndicadorForm());
 			
-			Database database = (Database) session.getAttribute("database");
+			DBSession dbSession = (DBSession) session.getAttribute("dbSession");
 			
 			if(!indicadorForm.camposVacios()){
 				
 				if(!indicadorForm.caracteresInvalidos()){
-					
-					//Database indicadores = (Database) session.getAttribute("database");
-					
-					if(!indicadorForm.nombreExistente(database.getIndicadores())){
+										
+					if(!indicadorForm.nombreExistente(dbSession.getIndicadores())){
 						
 						if(!indicadorForm.existeRecursividad()){
 							
@@ -429,7 +374,7 @@ public class MiController {
 								Usuario usuario = (Usuario) session.getAttribute("usuario");
 								Indicador nuevoIndicador = new Indicador();
 								nuevoIndicador.crearIndicador(indicadorForm.getNombre(),indicadorForm.getExpresion(),usuario);
-								database.addIndicador(nuevoIndicador);
+								dbSession.addIndicador(nuevoIndicador);
 							
 							// Error sintactico en indicador
 							} else {
@@ -459,8 +404,8 @@ public class MiController {
 			// CONTROLAR EXISTENCIA DE NOMBRE DE INDICADORES
 			
 			model.addObject("command",new CrearIndicadorForm());
-			model.addObject("indicadores", database.getIndicadores());
-			model.addObject("cuentas", database.getCuentas());
+			model.addObject("indicadores", dbSession.getIndicadores());
+			model.addObject("cuentas", dbCotizacion.getCuentas());
 			
 		}
 		
@@ -501,12 +446,10 @@ public class MiController {
 			
 			model.setViewName("consultarCuenta");
 			model.addObject("usuario",usuario);
-			
-			Database database = (Database) session.getAttribute("database");
-			
-			model.addObject("empresas",database.getEmpresas());
-			model.addObject("cuentas",database.getCuentas());
-			model.addObject("anios",database.getAnios());
+						
+			model.addObject("empresas",dbCotizacion.getEmpresas());
+			model.addObject("cuentas",dbCotizacion.getCuentas());
+			model.addObject("anios",dbCotizacion.getAnios());
 			
 			ArrayList<Cotizacion> resultados = new ArrayList<Cotizacion>();
 			model.addObject("resultados",resultados);
@@ -522,9 +465,7 @@ public class MiController {
 	// Generar consulta cuenta 
 	@RequestMapping(value="generarConsultaCuenta", method=RequestMethod.POST)
 	public ModelAndView generarConsultaCuenta(HttpSession session, FiltroConsultaCuenta filtroConsulta) {		
-		
-		System.out.println("pase");
-		
+				
 		ModelAndView model = new ModelAndView();
 			
 		if(session.getAttribute("usuario") == null){
@@ -538,14 +479,12 @@ public class MiController {
 			model.addObject("command",new FiltroConsultaCuenta());
 			
 			model.addObject("usuario",usuario);
+						
+			model.addObject("empresas",dbCotizacion.getEmpresas());
+			model.addObject("cuentas",dbCotizacion.getCuentas());
+			model.addObject("anios",dbCotizacion.getAnios());
 			
-			Database database = (Database) session.getAttribute("database");
-			
-			model.addObject("empresas",database.getEmpresas());
-			model.addObject("cuentas",database.getCuentas());
-			model.addObject("anios",database.getAnios());
-			
-			ArrayList<Cotizacion> resultados = database.generarConsultaCuenta(filtroConsulta);
+			ArrayList<Cotizacion> resultados = dbCotizacion.generarConsultaCuenta(filtroConsulta);
 			model.addObject("resultados", resultados);
 			
 		}
