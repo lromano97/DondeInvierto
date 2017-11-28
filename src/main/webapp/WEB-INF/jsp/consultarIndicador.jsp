@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -77,23 +79,36 @@
 			</div>
 			  <div class="container">
 				<h3>Filtro de evaluacion</h3>
-			    <form>
+			    <form:form action="generarConsultaIndicador.html" method="post">
 			      <div class="form-group-sm row col-sm-4">
-			        <label for="cuenta">Indicador</label>
-			        <select class="form-control" id="cuenta" name="" style="margin:5px 5px 5px 10px;">
-			          <option value=""></option>
-			        </select>
+			      
+					<label for="indicador">Indicador</label>
+			        <form:select path="indicador" id="indicador" cssClass="form-control" style="margin:5px 5px 5px 10px;">
+							<form:option value="Todos" label="Todos"/>
+							<c:forEach items="${indicadores}" var="indicador">     
+								<form:option value="${indicador.getNombre()}" label="${indicador.getNombre()}"/>
+							</c:forEach>
+					</form:select>
+					
 			        <label for="empresa">Empresa</label>
-			        <select class="form-control" id="empresa"name="" style="margin:5px 5px 5px 10px;">
-			          <option value=""></option>
-			        </select>
+			        <form:select path="empresa" id="empresa" cssClass="form-control" style="margin:5px 5px 5px 10px;">
+							<form:option value="Todos" label="Todos"/>
+							<c:forEach items="${empresas}" var="empresa">     
+								<form:option value="${empresa}" label="${empresa}"/>
+							</c:forEach>
+					</form:select>
+					
 			     	<label for="anio">Año</label>
-					    <select class="form-control" id="anio" name="" style="margin:5px 5px 5px 10px;">
-				  	      <option value=""></option>
-				   	    </select>
-				  	    <button type="button" name="button" class="btn btn-primary" style="margin:5px 5px 5px 10px;">Evaluar</button>
+			     	<form:select path="anio" id="año" cssClass="form-control" style="margin:5px 5px 5px 10px;">
+						<form:option value="Todos" label="Todos"/>
+						<c:forEach items="${anios}" var="anio">     
+							<form:option value="${anio}" label="${anio}"/>
+						</c:forEach>
+					</form:select>
+					
+					<button class="btn btn-primary" class="submitIndicador form-control" type="submit" style="margin:5px 5px 5px 10px;">Evaluar</button>
 				  </div>
-			    </form>
+			    </form:form>
 			 </div>
 			
 

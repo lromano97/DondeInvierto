@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import iceblock.IBlock;
 import iceblock.connection.ConnectionManager;
@@ -21,6 +22,16 @@ public class DBSession {
 	
 	public ArrayList<Indicador> getIndicadores(){
 		return indicadores;
+	}
+	
+	public void updateIndicadores(Integer idUsuario) throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, SQLException{
+		
+		List<Indicador> listaIndicadores = IBlock.select(ConnectionManager.getConnection(), Indicador.class, "indicador.id_usuario=" + idUsuario);
+		
+		for(Indicador unIndicador : listaIndicadores){
+			indicadores.add(unIndicador);
+		}
+		
 	}
 	
 	public Indicador obtenerIndicador(String nombreIndicador) {

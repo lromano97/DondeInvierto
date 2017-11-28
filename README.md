@@ -19,7 +19,7 @@ Scherer, Ivan 155-537.6<br />
 - [X] Error 404/500/505.
 - [X] Parser de indicadores.
 - [X] Crear indicadores.
-- [ ] Traer indicadores ya creados de la DB.
+- [X] Traer indicadores ya creados de la DB.
 - [ ] Consulta de indicadores con MondoDB.
 - [ ] Precalculo de indicadores con MongoDB. 
 - [ ] Gestion de indicadores (Solo borrar).

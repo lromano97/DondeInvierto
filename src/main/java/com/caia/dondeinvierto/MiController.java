@@ -171,6 +171,7 @@ public class MiController {
 					Usuario usuario = login.buscaUsuario().get(0);
 					
 					DBSession dbSession = new DBSession();
+					dbSession.updateIndicadores(usuario.getIdUsuario());
 					
 					session.setAttribute("usuario", usuario);
 					session.setAttribute("dbSession", dbSession);
@@ -527,9 +528,16 @@ public class MiController {
 		} else {
 			
 			Usuario usuario = (Usuario) session.getAttribute("usuario");
-				
+			DBSession dbSession = (DBSession) session.getAttribute("dbSession");
+			
 			model.setViewName("consultarIndicador");
+			
 			model.addObject("usuario",usuario);
+			model.addObject("empresas",dbCotizacion.getEmpresas());
+			model.addObject("anios",dbCotizacion.getAnios());
+			model.addObject("indicadores",dbSession.getIndicadores());
+			
+			model.addObject("command", new FiltroConsultaIndicador());
 			
 		}
 		
@@ -537,6 +545,7 @@ public class MiController {
 		
 	}
 	
+	// Generar consulta indicador
 	@RequestMapping(value="generarConsultaIndicador", method=RequestMethod.POST)
 	public ModelAndView generarConsultaIndicador(HttpSession session, FiltroConsultaIndicador filtroConsulta) throws Exception {		
 		
@@ -552,32 +561,33 @@ public class MiController {
 			EvaluarIndicadores indicadorAEvaluar= new  EvaluarIndicadores();
 			
 			DBCollection collection = db.getCollection("PreIndicadores");
-			String nombreIndicador = filtroConsulta.getNombreIndicador();
-			String an = Integer.toString(filtroConsulta.getAnio());
+			String nombreIndicador = filtroConsulta.getIndicador();
+			String an = filtroConsulta.getAnio();
 			BasicDBObject query = new BasicDBObject();
 			List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
-			obj.add(new BasicDBObject("indicador", filtroConsulta.getNombreIndicador()));
+			obj.add(new BasicDBObject("indicador", filtroConsulta.getIndicador()));
 			obj.add(new BasicDBObject("empresa", filtroConsulta.getEmpresa()));
 			obj.add(new BasicDBObject("anio", an));
 			obj.add(new BasicDBObject("idUsuario", usuario.getIdUsuario()));
 			DBCursor cursor=(DBCursor) collection.findOne(query);
 			if(cursor == null) {	
-				String formula= indicadorAEvaluar.generarFormula(filtroConsulta.getNombreIndicador(), filtroConsulta.getAnio(), filtroConsulta.getEmpresa(), dbSession);
+				String formula= indicadorAEvaluar.generarFormula(nombreIndicador, Integer.parseInt(an), filtroConsulta.getEmpresa(), dbSession);
 				ScriptEngineManager mgr = new ScriptEngineManager();
 				ScriptEngine engine = mgr.getEngineByName("JavaScript");
 				double valorIndicador = (Double) engine.eval(formula);
-				PreIndicador preIndicador=new PreIndicador(nombreIndicador,filtroConsulta.getEmpresa(),filtroConsulta.getAnio(), usuario.getIdUsuario().intValue() ,valorIndicador);
+				PreIndicador preIndicador=new PreIndicador(nombreIndicador,filtroConsulta.getEmpresa(),Integer.parseInt(an), usuario.getIdUsuario().intValue() ,valorIndicador);
 				collection.insert(preIndicador.toDBObjectPreIndicador());
+				System.out.println(valorIndicador);
 						
 			}
 					
-					//MOSTRAR POR INTERFAZ
-					
-				}
+			//MOSTRAR POR INTERFAZ
+			model.setViewName("consultarIndicador");
+			model.addObject("command", new FiltroConsultaIndicador());
+						
+		}
+		
 		return model;					
-			
-		
-		
 	
 	}
 	// Ir a consultar metodologia

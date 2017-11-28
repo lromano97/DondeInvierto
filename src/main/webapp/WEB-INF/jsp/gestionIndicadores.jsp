@@ -165,11 +165,13 @@
 			            </tr>
 			          </thead>
 			          <tbody>
-			            <tr>
-			              <th><input type="text" name="" placeholder="Indicador" class="form-control" value=""></th>
-			              <th><input type="text" name="" placeholder="Formula" class="form-control" value=""></th>
-			              <th><button type="button" name="button" class="btn"><i class="fa fa-times" aria-hidden="true" style="margin: 3px 2px 2px 2px;"></i></button></th>
-			            </tr>
+			         	<c:forEach items="${indicadores}" var="indicador">								
+				            <tr>
+				              <th><input type="text" name="" placeholder="Indicador" class="form-control" value="<c:out value='${indicador.getNombre()}'/>"></th>
+				              <th><input type="text" name="" placeholder="Formula" class="form-control" value="<c:out value='${indicador.getExpresion()}'/>"></th>
+				              <th><button type="button" name="button<c:out value='${indicador.getIdIndicador()}'/>" class="btn"><i class="fa fa-times" aria-hidden="true" style="margin: 3px 2px 2px 2px;"></i></button></th>
+				            </tr>
+			            </c:forEach>
 			          </tbody>
 			        </table>
 				</div>
