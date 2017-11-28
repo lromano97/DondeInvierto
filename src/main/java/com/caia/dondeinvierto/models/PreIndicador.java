@@ -1,9 +1,11 @@
 package com.caia.dondeinvierto.models;
 
+import org.bson.BasicBSONObject;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 
 @Entity
 public class PreIndicador {
@@ -76,12 +78,13 @@ public class PreIndicador {
 	}
 
 	// Transformo un objecto que me da MongoDB a un Objecto Java
-	public PreIndicador(BasicDBObject dBObjectPreIndicador) {
-		this.indicador = dBObjectPreIndicador.getString("indicador");
-		this.empresa = dBObjectPreIndicador.getString("empresa");
-		this.anio = dBObjectPreIndicador.getInt("anio");
-		this.idUsuario = dBObjectPreIndicador.getInt("usuario");
-		this.valor=dBObjectPreIndicador.getInt("valor");
+	public PreIndicador(DBObject cursor) 
+	{
+		this.indicador = (String) cursor.get("indicador");
+		this.empresa = (String) cursor.get("empresa");
+		this.anio = (Integer) cursor.get("anio");
+		this.idUsuario = (Integer) cursor.get("usuario");
+		this.valor=(Double) cursor.get("valor");
 	}
 	
 	public BasicDBObject toDBObjectPreIndicador() {

@@ -12,7 +12,7 @@ import javax.script.ScriptException;
 
 
 public class EvaluarIndicadores{
-	String formula;
+	String formula = "";
 
 	private boolean esNumero(char primero) {
 		return Pattern.matches("[0-9]", String.valueOf(primero));

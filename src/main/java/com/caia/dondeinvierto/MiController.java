@@ -2,6 +2,7 @@ package com.caia.dondeinvierto;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class MiController {
 		
 		// Conexion a MongoDB
         MongoClient cliente = new MongoClient("localhost", 27017);
-		Datastore ds = new Morphia().createDatastore(cliente, "test1");	
+		Datastore ds = new Morphia().createDatastore(cliente, "PreIndicadores");	
 		db = cliente.getDB("PreIndicadores");
 
 		// PASO 3: Obtenemos una coleccion para trabajar con ella
@@ -569,18 +570,28 @@ public class MiController {
 			obj.add(new BasicDBObject("empresa", filtroConsulta.getEmpresa()));
 			obj.add(new BasicDBObject("anio", an));
 			obj.add(new BasicDBObject("idUsuario", usuario.getIdUsuario()));
-			DBCursor cursor=(DBCursor) collection.findOne(query);
+			query.put("$and", obj);
+			DBObject cursor= collection.findOne(query);
 			if(cursor == null) {	
 				String formula= indicadorAEvaluar.generarFormula(nombreIndicador, Integer.parseInt(an), filtroConsulta.getEmpresa(), dbSession);
 				ScriptEngineManager mgr = new ScriptEngineManager();
 				ScriptEngine engine = mgr.getEngineByName("JavaScript");
-				double valorIndicador = (Double) engine.eval(formula);
+				double valorIndicador = Double.parseDouble(engine.eval(formula).toString());				
+//				double valorIndicador = Double.parseDouble((String) engine.eval(formula));
 				PreIndicador preIndicador=new PreIndicador(nombreIndicador,filtroConsulta.getEmpresa(),Integer.parseInt(an), usuario.getIdUsuario().intValue() ,valorIndicador);
 				collection.insert(preIndicador.toDBObjectPreIndicador());
-				System.out.println(valorIndicador);
-						
 			}
-					
+			
+			System.out.println("arafue");
+				System.out.println("atroden");
+				System.out.println(cursor.toString());
+//				PreIndicador preIndi = new PreIndicador(cursor); 
+//				System.out.println(preIndi.getValor());
+				
+			
+			
+			
+		
 			//MOSTRAR POR INTERFAZ
 			model.setViewName("consultarIndicador");
 			model.addObject("command", new FiltroConsultaIndicador());

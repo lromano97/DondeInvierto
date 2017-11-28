@@ -23,7 +23,6 @@ public class Cotizacion {
 	
 	// Constructor
 	public Cotizacion crearCotizacion(String _empresa, String _cuenta, int _anio, double _valor){
-		System.out.println(_empresa);
 		empresa = _empresa;
 		cuenta = _cuenta;
 		anio = _anio;
