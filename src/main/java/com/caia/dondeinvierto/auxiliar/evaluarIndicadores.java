@@ -6,6 +6,10 @@ import com.caia.dondeinvierto.models.DBSession;
 import com.caia.dondeinvierto.models.Indicador;
 import java.util.regex.Pattern;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
 
 public class evaluarIndicadores{
 	String formula;
@@ -69,5 +73,14 @@ public class evaluarIndicadores{
 			}
 		}
 		return formula;
+	}
+	
+	public double evaluarIndicador(String nombreIndicador, String empresa, int anio, DBSession dbsession) throws Exception {
+		String formulaEvaluada;
+		formulaEvaluada = generarFormula(nombreIndicador, anio, empresa, dbsession);
+		ScriptEngineManager mgr = new ScriptEngineManager();
+		ScriptEngine engine = mgr.getEngineByName("JavaScript");
+		double valorIndicador = (Double) engine.eval(formulaEvaluada);
+		return valorIndicador;
 	}
 }
