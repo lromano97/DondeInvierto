@@ -11,7 +11,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 
-public class evaluarIndicadores{
+public class EvaluarIndicadores{
 	String formula;
 
 	private boolean esNumero(char primero) {
@@ -78,6 +78,7 @@ public class evaluarIndicadores{
 	public double evaluarIndicador(String nombreIndicador, String empresa, int anio, DBSession dbsession) throws Exception {
 		String formulaEvaluada;
 		formulaEvaluada = generarFormula(nombreIndicador, anio, empresa, dbsession);
+		
 		ScriptEngineManager mgr = new ScriptEngineManager();
 		ScriptEngine engine = mgr.getEngineByName("JavaScript");
 		double valorIndicador = (Double) engine.eval(formulaEvaluada);

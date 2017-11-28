@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -21,8 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.caia.dondeinvierto.auxiliar.EvaluarIndicadores;
 import com.caia.dondeinvierto.auxiliar.ParserCSV;
 import com.caia.dondeinvierto.auxiliar.ScheduledTask;
+import com.caia.dondeinvierto.auxiliar.evaluarIndicadores;
 import com.caia.dondeinvierto.forms.*;
 import com.caia.dondeinvierto.models.Condicion;
 import com.caia.dondeinvierto.models.Cotizacion;
@@ -30,10 +34,15 @@ import com.caia.dondeinvierto.models.DBCotizacion;
 import com.caia.dondeinvierto.models.DBSession;
 import com.caia.dondeinvierto.models.Indicador;
 import com.caia.dondeinvierto.models.Metodologia;
+import com.caia.dondeinvierto.models.PreIndicador;
 import com.caia.dondeinvierto.models.Usuario;
 
 import iceblock.connection.ConnectionManager;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
 import org.apache.commons.io.IOUtils;
@@ -46,7 +55,9 @@ public class MiController {
 	
 	Connection conn = null;
 	DBCotizacion dbCotizacion = null;
+	DB db=null;
 	
+	@SuppressWarnings("deprecation")
 	public MiController() throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException{
 			
 		// Conexion a DB relacional
@@ -58,8 +69,12 @@ public class MiController {
 		this.dbCotizacion.update();
 		
 		// Conexion a MongoDB
-        //MongoClient cliente = new MongoClient("localhost", 27017);
-		//Datastore ds = new Morphia().createDatastore(cliente, "test1");
+        MongoClient cliente = new MongoClient("localhost", 27017);
+		Datastore ds = new Morphia().createDatastore(cliente, "test1");	
+		db = cliente.getDB("PreIndicadores");
+
+		// PASO 3: Obtenemos una coleccion para trabajar con ella
+		DBCollection collection = db.getCollection("Futbolistas");
 		
 		// Ivan scheduler
 		Timer time = new Timer();		
@@ -345,7 +360,7 @@ public class MiController {
 	
 	// Generar indicador 
 	@RequestMapping(value="generarIndicador", method = RequestMethod.POST)
-	public ModelAndView generarIndicador(HttpSession session, CrearIndicadorForm indicadorForm) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException, InstantiationException {
+	public ModelAndView generarIndicador(HttpSession session, CrearIndicadorForm indicadorForm) throws Exception {
 		
 		ModelAndView model = new ModelAndView();
 		
@@ -375,7 +390,31 @@ public class MiController {
 								Indicador nuevoIndicador = new Indicador();
 								nuevoIndicador.crearIndicador(indicadorForm.getNombre(),indicadorForm.getExpresion(),usuario);
 								dbSession.addIndicador(nuevoIndicador);
-							
+								
+								EvaluarIndicadores indicadorAEvaluar= new  EvaluarIndicadores();
+								
+								for(String empresa:dbCotizacion.getEmpresas()) {
+									for(int anio:dbCotizacion.getAnios()) {
+										String formula= indicadorAEvaluar.generarFormula(nuevoIndicador.getNombre(), anio,empresa, dbSession);
+										DBCollection collection = db.getCollection("PreIndicadores");
+										String nombreIndicador = nuevoIndicador.getNombre();
+										String an = Integer.toString(anio);
+										BasicQuery query = new BasicQuery("{ indicador : "+nombreIndicador+" , anio : "+an+" , empresa : "+empresa+" }");
+										DBCursor cursor=collection.findOne(query);
+										if(cursor == null) {											
+											ScriptEngineManager mgr = new ScriptEngineManager();
+											ScriptEngine engine = mgr.getEngineByName("JavaScript");
+											double valorIndicador = (Double) engine.eval(formula);
+											PreIndicador preIndicador=new PreIndicador(nombreIndicador,empresa,anio, usuario.getIdUsuario().intValue() ,valorIndicador);
+											collection.insert(preIndicador.toDBObjectPreIndicador());
+											
+										}
+										
+										//MOSTRAR POR INTERFAZ
+										
+									}															
+								}
+								
 							// Error sintactico en indicador
 							} else {
 								model.addObject("msg",5);
@@ -567,5 +606,7 @@ public class MiController {
 		return model;
 		
 	}
+	
+	
 }
 
