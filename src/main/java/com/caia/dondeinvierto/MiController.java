@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.mongodb.morphia.Morphia;
+import org.mongodb.morphia.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,7 +27,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.caia.dondeinvierto.auxiliar.EvaluarIndicadores;
 import com.caia.dondeinvierto.auxiliar.ParserCSV;
 import com.caia.dondeinvierto.auxiliar.ScheduledTask;
-import com.caia.dondeinvierto.auxiliar.evaluarIndicadores;
 import com.caia.dondeinvierto.forms.*;
 import com.caia.dondeinvierto.models.Condicion;
 import com.caia.dondeinvierto.models.Cotizacion;
@@ -42,8 +42,10 @@ import iceblock.connection.ConnectionManager;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.QueryBuilder;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.net.ftp.FTPClient;
@@ -391,29 +393,7 @@ public class MiController {
 								nuevoIndicador.crearIndicador(indicadorForm.getNombre(),indicadorForm.getExpresion(),usuario);
 								dbSession.addIndicador(nuevoIndicador);
 								
-								EvaluarIndicadores indicadorAEvaluar= new  EvaluarIndicadores();
 								
-								for(String empresa:dbCotizacion.getEmpresas()) {
-									for(int anio:dbCotizacion.getAnios()) {
-										String formula= indicadorAEvaluar.generarFormula(nuevoIndicador.getNombre(), anio,empresa, dbSession);
-										DBCollection collection = db.getCollection("PreIndicadores");
-										String nombreIndicador = nuevoIndicador.getNombre();
-										String an = Integer.toString(anio);
-										BasicQuery query = new BasicQuery("{ indicador : "+nombreIndicador+" , anio : "+an+" , empresa : "+empresa+" }");
-										DBCursor cursor=collection.findOne(query);
-										if(cursor == null) {											
-											ScriptEngineManager mgr = new ScriptEngineManager();
-											ScriptEngine engine = mgr.getEngineByName("JavaScript");
-											double valorIndicador = (Double) engine.eval(formula);
-											PreIndicador preIndicador=new PreIndicador(nombreIndicador,empresa,anio, usuario.getIdUsuario().intValue() ,valorIndicador);
-											collection.insert(preIndicador.toDBObjectPreIndicador());
-											
-										}
-										
-										//MOSTRAR POR INTERFAZ
-										
-									}															
-								}
 								
 							// Error sintactico en indicador
 							} else {
@@ -492,9 +472,9 @@ public class MiController {
 			
 			ArrayList<Cotizacion> resultados = new ArrayList<Cotizacion>();
 			model.addObject("resultados",resultados);
-		
+			
 			model.addObject("command",new FiltroConsultaCuenta());
-						
+			
 		}
 		
 		return model;
@@ -557,6 +537,49 @@ public class MiController {
 		
 	}
 	
+	@RequestMapping(value="generarConsultaIndicador", method=RequestMethod.POST)
+	public ModelAndView generarConsultaIndicador(HttpSession session, FiltroConsultaIndicador filtroConsulta) throws Exception {		
+		
+		ModelAndView model = new ModelAndView();
+		
+		if(session.getAttribute("usuario") == null){
+			model.setViewName("login");
+			model.addObject("command",new LoginForm());
+		} else {
+			
+			DBSession dbSession = (DBSession) session.getAttribute("dbSession");
+			Usuario usuario = (Usuario) session.getAttribute("usuario");
+			EvaluarIndicadores indicadorAEvaluar= new  EvaluarIndicadores();
+			
+			DBCollection collection = db.getCollection("PreIndicadores");
+			String nombreIndicador = filtroConsulta.getNombreIndicador();
+			String an = Integer.toString(filtroConsulta.getAnio());
+			BasicDBObject query = new BasicDBObject();
+			List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
+			obj.add(new BasicDBObject("indicador", filtroConsulta.getNombreIndicador()));
+			obj.add(new BasicDBObject("empresa", filtroConsulta.getEmpresa()));
+			obj.add(new BasicDBObject("anio", an));
+			obj.add(new BasicDBObject("idUsuario", usuario.getIdUsuario()));
+			DBCursor cursor=(DBCursor) collection.findOne(query);
+			if(cursor == null) {	
+				String formula= indicadorAEvaluar.generarFormula(filtroConsulta.getNombreIndicador(), filtroConsulta.getAnio(), filtroConsulta.getEmpresa(), dbSession);
+				ScriptEngineManager mgr = new ScriptEngineManager();
+				ScriptEngine engine = mgr.getEngineByName("JavaScript");
+				double valorIndicador = (Double) engine.eval(formula);
+				PreIndicador preIndicador=new PreIndicador(nombreIndicador,filtroConsulta.getEmpresa(),filtroConsulta.getAnio(), usuario.getIdUsuario().intValue() ,valorIndicador);
+				collection.insert(preIndicador.toDBObjectPreIndicador());
+						
+			}
+					
+					//MOSTRAR POR INTERFAZ
+					
+				}
+		return model;					
+			
+		
+		
+	
+	}
 	// Ir a consultar metodologia
 	@RequestMapping(value="consultarMetodologia", method={RequestMethod.GET})
 	public ModelAndView irAConsultarMetodologia(HttpSession session){
