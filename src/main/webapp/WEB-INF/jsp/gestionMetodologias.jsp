@@ -32,7 +32,7 @@
 						<a class="navbar-brand" href="#">Menu principal</a>
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
-					<ul class="nav navbar-nav">					
+					<ul class="nav navbar-nav">
 						<li><a href="inicio.html">Inicio</a></li>
 						<c:if test="${usuario.getRango()==0}">
 							<li><a href="proyecto.html">Proyecto</a></li>
@@ -62,10 +62,10 @@
 				</div>
 			</div>
 		</nav>
-		
+
 		<!-- Container -->
 		<div class="container theme-showcase" role="main">
-				
+
 			<c:choose>
 			    <c:when test="${msg == 0}">
 			    	<div class="alert alert-success" role="alert">
@@ -88,7 +88,7 @@
 					</div>
 			    </c:when>
 			</c:choose>
-			
+
 			<!-- DivInfo -->
 			<div class="jumbotron">
 				<h1>Metodologias.</h1>
@@ -99,7 +99,7 @@
 			<div class="page-header">
 				<h1>Nueva Metodologia</h1>
 			</div>
-			
+
 			<div class="container">
 				<div class="row">
       				<input type="text" class="col-sm-2" name="" value="" placeholder="Nombre" style="margin:5px 5px 5px 10px; height:30px;">
@@ -112,8 +112,39 @@
                    		 	<hr>
                    	</div>
 		    	</form>
-			</div>	
-			
+			</div>
+			<div class="form-group row">
+				<h3>Edite sus metodologias</h3>
+				<hr>
+		        <div class="col-xs-4">
+		          <select class="form-control" name="">
+		            <option value=""disabled selected>Nombre</option>
+		          </select>
+		        </div>
+		    </div>
+			<div class="table-responsive">
+		        <table class="table table-striped">
+		          <thead>
+		            <tr class="">
+		              <th>Parametro</th>
+		              <th>Comparador</th>
+		              <th>Parametro</th>
+		              <th>Delete</th>
+		            </tr>
+		          </thead>
+		          <tbody>
+		            <tr>
+		              <th><input type="text" name="" placeholder="Parametro" class="form-control" value=""></th>
+		              <th><select class="form-control" name="">
+		                <option value="" disabled selected>Comparador</option>
+		              </select></th>
+		              <th><input type="text" name="" placeholder="Parametro" class="form-control" value=""></th>
+		              <th><button type="button" name="button" class="btn"><i class="fa fa-times" aria-hidden="true" style="margin: 3px 2px 2px 2px;"></i></button></th>
+		            </tr>
+		          </tbody>
+		        </table>
+     		 </div>
+     		 <button type="button" name="button" class="btn btn-primary" style="margin:5px 5px 5px 10px;">Eliminar metodologia</button>
 			<script>
 			$(document).click(function(){
 				$("#botonCondiciones").click(function(){
@@ -129,11 +160,11 @@
 						form.appendChild(createDiv);
 						createDiv.innerHTML = '<input type="text" class="col-sm-2" placeholder="Parametro" name="parametro1" value="" style="height:30px; margin:5px 5px 5px 10px;">'+
 							'<select class="col-sm-2 miComparador" id="cmp{'+i+'}"name="comparador{'+i+'}" style="height:30px; margin:5px 5px 5px 5px;">'+
-				    	'<option value="" selected disabled>Comparador</option>'+    
+				    	'<option value="" selected disabled>Comparador</option>'+
 				    	'<option value="1">Igual</option>'+
-					    	'<option value="2">Mayor</option>'+       				
-					    	'<option value="3">Menor</option>'+       				
-					    	'<option value="4">Constante en los años</option>'+        				
+					    	'<option value="2">Mayor</option>'+
+					    	'<option value="3">Menor</option>'+
+					    	'<option value="4">Constante en los años</option>'+
 					    	'</select>';
 					    	var lastParameter = '<input type="text" class="col-sm-2" placeholder="Parametro" name="parametro2{'+i+'}" style="margin:5px 10px 5px 5px; height:30px;">';
 					    createDiv.innerHTML += lastParameter;
