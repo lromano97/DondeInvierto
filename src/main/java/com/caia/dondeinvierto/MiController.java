@@ -584,7 +584,9 @@ public class MiController {
 			
 			System.out.println("arafue");
 				System.out.println("atroden");
-				System.out.println(cursor.toString());
+				System.out.println(cursor);
+				DBObject cursor2= collection.findOne(query);
+				System.out.println(cursor2);
 //				PreIndicador preIndi = new PreIndicador(cursor); 
 //				System.out.println(preIndi.getValor());
 				
