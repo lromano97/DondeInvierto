@@ -12,7 +12,7 @@
 		<meta name="author" content="">
 		<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 		<link href="resources/css/web.css" rel="stylesheet">
-		<title>Consultar Cuenta - dondeInvierto</title>
+		<title>Consultar Cuentas - dondeInvierto</title>
 	</head>
 
 	<body>
@@ -40,20 +40,20 @@
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cuentas<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="consultarCuenta.html">Consultar cuentas</a></li>
+								<li><a href="consultarCuentas.html">Consultar cuentas</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Indicadores<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="consultarIndicador.html">Consultar indicadores</a></li>
+								<li><a href="evaluarIndicadores.html">Evaluar indicadores</a></li>
 								<li><a href="gestionIndicadores.html">Gestión indicadores</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Metodologías<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="consultarMetodologia.html">Consultar metodologías</a></li>
+								<li><a href="evaluarMetodologias.html">Evaluar metodologías</a></li>
 								<li><a href="gestionMetodologias.html">Gestión metodologías</a></li>
 							</ul>
 						</li>
@@ -74,8 +74,8 @@
 			</c:choose>
 			<!-- DivInfo -->
 			<div class="jumbotron">
-				<h1>Consultar Cuenta</h1>
-				<p>Consulte las distintas cuentas que fueron cargadas por usted</p>
+				<h1>Consultar Cuentas</h1>
+				<p>Consulte las distintas cuentas que fueron cargadas por usted.</p>
 			</div>
 			<div class="container">
 				<h3>Filtro de busqueda</h3>

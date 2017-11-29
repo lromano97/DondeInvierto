@@ -15,10 +15,8 @@ public class PreIndicador {
 	private String empresa;
 	private int anio;
 	private int idUsuario;
-	private double valor;
+	private String valor;
 	
-	
-
 	public int getIdIndicador() {
 		return idIndicador;
 	}
@@ -59,15 +57,15 @@ public class PreIndicador {
 		this.idUsuario = idUsuario;
 	}
 
-	public double getValor() {
+	public String getValor() {
 		return valor;
 	}
 
-	public void setValor(double valor) {
+	public void setValor(String valor) {
 		this.valor = valor;
 	}
 
-	public PreIndicador (String _indicador, String _empresa, int _anio, int _idUsuario,double _valor) {
+	public PreIndicador (String _indicador, String _empresa, int _anio, int _idUsuario,String _valor) {
 		
 		this.setIndicador(_indicador);
 		this.setEmpresa(_empresa);
@@ -84,7 +82,7 @@ public class PreIndicador {
 		this.empresa = (String) cursor.get("empresa");
 		this.anio = (Integer) cursor.get("anio");
 		this.idUsuario = (Integer) cursor.get("usuario");
-		this.valor=(Double) cursor.get("valor");
+		this.valor=(String) cursor.get("valor");
 	}
 	
 	public BasicDBObject toDBObjectPreIndicador() {

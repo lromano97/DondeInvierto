@@ -40,20 +40,20 @@
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cuentas<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="#">Consultar cuentas</a></li>
+								<li><a href="consultarCuentas.html">Consultar cuentas</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Indicadores<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="consultarIndicador.html">Consultar indicadores</a></li>
+								<li><a href="evaluarIndicadores.html">Evaluar indicadores</a></li>
 								<li><a href="gestionIndicadores.html">Gestión indicadores</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Metodologías<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="consultarMetodologia.html">Consultar metodologías</a></li>
+								<li><a href="evaluarMetodologias.html">Evaluar metodologías</a></li>
 								<li><a href="gestionMetodologias.html">Gestión metodologías</a></li>
 							</ul>
 						</li>
@@ -101,8 +101,8 @@
 
 			<!-- DivInfo -->
 			<div class="jumbotron">
-				<h1>Indicadores.</h1>
-				<p>Cree, edite o elimine indicadores creados por usted.</p>
+				<h1>Gestion de Indicadores.</h1>
+				<p>Cree o elimine indicadores creados por usted.</p>
 			</div>
 
 			<!-- Formulario -->
@@ -154,7 +154,7 @@
 				</div>
 
 				<div class="table-responsive">
-					<h3>Edite sus indicadores</h3>
+					<h3>Elimine sus indicadores</h3>
 					<hr>
 			        <table class="table table-striped">
 			          <thead>
@@ -167,15 +167,39 @@
 			          <tbody>
 			         	<c:forEach items="${indicadores}" var="indicador">								
 				            <tr>
-				              <th><input type="text" name="" placeholder="Indicador" class="form-control" value="<c:out value='${indicador.getNombre()}'/>"></th>
-				              <th><input type="text" name="" placeholder="Formula" class="form-control" value="<c:out value='${indicador.getExpresion()}'/>"></th>
-				              <th><button type="button" name="button<c:out value='${indicador.getIdIndicador()}'/>" class="btn"><i class="fa fa-times" aria-hidden="true" style="margin: 3px 2px 2px 2px;"></i></button></th>
+				              <th><input type="text" name="" placeholder="Indicador" rverclass="form-control" value="<c:out value='${indicador.getNombre()}'/>" disabled></th>
+				              <th><input type="text" name="" placeholder="Formula" class="form-control" value="<c:out value='${indicador.getExpresion()}'/>" disabled></th>
+				              <th>				              
+				              	<form:form method="get" action="eliminarIndicador.html">
+				              		<!--  <button type="button" name="removeButton" id="removeButton" onclick="location.href='eliminarIndicador/<c:out value='${indicador.getIdIndicador()}'/>.html'" class="btn deleteButton"><i class="fa fa-times" aria-hidden="true" style="margin: 3px 2px 2px 2px;"></i></button>
+				            		-->
+				            		<button name="removeButton" type="submit" id="removeButton" value="<c:out value='${indicador.getIdIndicador()}'/>" class="btn deleteButton"><i class="fa fa-times" aria-hidden="true" style="margin: 3px 2px 2px 2px;"></i></button>
+				            	</form:form>
+				              </th>
 				            </tr>
 			            </c:forEach>
 			          </tbody>
 			        </table>
 				</div>
 			</div>
+			<script type="text/javascript">
+				/*$(".deleteButton").click(function(){
+				    var form = document.createElement('form');
+				    document.body.appendChild(form);
+				    form.setAttribute('method', 'post');
+				    form.setAttribute('action', 'eliminarIndicador.html' );
+				    var input = document.createElement('input');
+				    form.appendChild(input);
+				    input.setAttribute('path', "idButton");
+				    var buttonName = this.getAttribute("name");
+				    var length = buttonName.length;
+				    var buttonNmr = buttonName.substring(6, length);
+				    input.setAttribute("value", buttonNmr);
+				    console.log(input.value);
+				    form.style.display = "none";
+					form.submit();
+				});*/
+			</script>
 			<!-- jQuery -->
 			<script src="resources/js/autocompleteIndicador.js"></script>
 			<!-- Bootstrap js -->

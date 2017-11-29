@@ -38,20 +38,20 @@
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cuentas<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="consultarCuenta.html">Consultar cuentas</a></li>
+								<li><a href="consultarCuentas.html">Consultar cuentas</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Indicadores<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="consultarIndicador.html">Consultar indicadores</a></li>
+								<li><a href="evaluarIndicadores.html">Evaluar indicadores</a></li>
 								<li><a href="gestionIndicadores.html">Gestión indicadores</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Metodologías<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="consultarMetodologia.html">Consultar metodologías</a></li>
+								<li><a href="evaluarMetodologias.html">Evaluar metodologías</a></li>
 								<li><a href="gestionMetodologias.html">Gestión metodologías</a></li>
 							</ul>
 						</li>

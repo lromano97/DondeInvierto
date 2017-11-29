@@ -78,42 +78,6 @@ public class ParserCSV {
 		
 	}
 	
-	public void cargarCSV(DBCotizacion dbCotizacion, String rowsCSV[]) throws NumberFormatException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, SQLException {
-		String[] values;
-		String empresa;
-		String cuenta;
-		Integer anio;
-		String valor;
-		for(int i=0; i < rowsCSV.length; i++){
-			
-			values = rowsCSV[i].split(",");
-			empresa = values[0];
-			
-			if (!dbCotizacion.getEmpresas().contains(empresa)){
-				dbCotizacion.addEmpresa(empresa);
-			}
-				
-			cuenta = values[1];
-				
-			if(!dbCotizacion.getCuentas().contains(cuenta)){
-				dbCotizacion.addCuenta(cuenta);
-			}
-				
-			anio = Integer.parseInt(values[2]);
-				
-			if(!dbCotizacion.getAnios().contains(anio)){
-				dbCotizacion.addAnio(anio);
-			}
-				
-			valor = values[3];
-			
-			Cotizacion unaCotizacion = new Cotizacion();
-			dbCotizacion.addCotizacion(unaCotizacion.crearCotizacion(empresa, cuenta, anio, Double.parseDouble(valor)));	
-			
-		}
-		
-	}
-	
 	public void generarRowsCSVTask(DBCotizacion dbCotizacion, byte[] bytes) throws IOException, NumberFormatException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, SQLException {
 		String completeData = new String(bytes);
 		String[] rowsFile = completeData.split("#");
@@ -125,7 +89,7 @@ public class ParserCSV {
 			rowsCSV[i] = rowsCSV[i].replaceAll("[\n\r]","");
 		}
 		
-		this.cargarCSV(dbCotizacion, rowsCSV);
+		dbCotizacion.update(rowsCSV);
 	}
 	
 	public void generarRowsCSV(DBCotizacion dbCotizacion, MultipartFile file) throws IOException, NumberFormatException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, SQLException {
@@ -140,7 +104,8 @@ public class ParserCSV {
 			rowsCSV[i] = rowsCSV[i].replaceAll("[\n\r]","");
 		}
 		
-		this.cargarCSV(dbCotizacion, rowsCSV);
+		dbCotizacion.update(rowsCSV);
+		
 	}
 	
 	private boolean esEmpresa(String x){

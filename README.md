@@ -20,9 +20,9 @@ Scherer, Ivan 155-537.6<br />
 - [X] Parser de indicadores.
 - [X] Crear indicadores.
 - [X] Traer indicadores ya creados de la DB.
-- [ ] Consulta de indicadores con MondoDB.
-- [ ] Precalculo de indicadores con MongoDB. 
-- [ ] Gestion de indicadores (Solo borrar).
+- [X] Consulta de indicadores con MondoDB.
+- [X] Precalculo de indicadores con MongoDB. 
+- [X] Gestion de indicadores (Solo borrar).
 - [ ] Crear metodologias de campos dinamicos con AJAX/JSON.
 - [ ] Consulta de metodologias.
 - [ ] Gestion de metodologias (Solo borrar).

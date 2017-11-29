@@ -22,6 +22,9 @@ public class Usuario {
 	
 	@OneToMany(type=Indicador.class, attr="usuario")
 	private List<Indicador> indicadores;
+	
+	@OneToMany(type=Metodologia.class, attr="usuario")
+	private List<Metodologia> metodologias;
 
 	public Integer getIdUsuario() {
 		return idUsuario;
@@ -61,6 +64,14 @@ public class Usuario {
 
 	public void setIndicadores(List<Indicador> indicadores) {
 		this.indicadores = indicadores;
+	}
+
+	public List<Metodologia> getMetodologias() {
+		return metodologias;
+	}
+
+	public void setMetodologias(List<Metodologia> metodologias) {
+		this.metodologias = metodologias;
 	}
 
 	

@@ -44,7 +44,7 @@ public class EvaluarIndicadores{
 				String nombreSubIndicador = obtenerNombre(indicadorAEvaluar.getExpresion(), posicion);
 				String formulaDeIndicador = generarFormula(nombreSubIndicador, anio, empresa, dbsession);
 				formula += formulaDeIndicador;
-			}else if(caracterAEvaluar == '$') {
+			}else if(caracterAEvaluar == '&') {
 				String nombreCuenta = obtenerNombre(indicadorAEvaluar.getExpresion(), posicion);
 				Cotizacion cotizacion = DBCotizacion.getInstance().obtenerValorCuenta(empresa, nombreCuenta, anio);
 				if(cotizacion == null) {

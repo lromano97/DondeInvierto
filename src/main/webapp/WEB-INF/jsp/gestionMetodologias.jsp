@@ -12,7 +12,7 @@
 		<link href="resources/css/web.css" rel="stylesheet">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-		<title>Gestion de Indicadores - dondeInvierto?</title>
+		<title>Gestion de Metodologias - dondeInvierto?</title>
 	</head>
 
 	<body>
@@ -40,20 +40,20 @@
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cuentas<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="consultarCuenta.html">Consultar cuentas</a></li>
+								<li><a href="consultarCuentas.html">Consultar cuentas</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Indicadores<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="consultarIndicador.html">Consultar indicadores</a></li>
+								<li><a href="evaluarIndicadores.html">Evaluar indicadores</a></li>
 								<li><a href="gestionIndicadores.html">Gestión indicadores</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Metodologías<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="consultarMetodologia.html">Consultar metodologías</a></li>
+								<li><a href="evaluarMetodologias.html">Evaluar metodologías</a></li>
 								<li><a href="gestionMetodologias.html">Gestión metodologías</a></li>
 							</ul>
 						</li>
@@ -91,7 +91,7 @@
 
 			<!-- DivInfo -->
 			<div class="jumbotron">
-				<h1>Metodologias.</h1>
+				<h1>Gestion de Metodologias.</h1>
 				<p>Cree, edite o elimine metodologias creadas por usted.</p>
 			</div>
 
@@ -113,40 +113,33 @@
                    	</div>
 		    	</form>
 			</div>
-			<div class="form-group row">
-				<h3>Edite sus metodologias</h3>
-				<hr>
-		        <div class="col-xs-4">
-		          <select class="form-control" name="">
-		            <option value=""disabled selected>Nombre</option>
-		          </select>
-		        </div>
-		    </div>
 			<div class="table-responsive">
-		        <table class="table table-striped">
-		          <thead>
-		            <tr class="">
-		              <th>Parametro</th>
-		              <th>Comparador</th>
-		              <th>Parametro</th>
-		              <th>Delete</th>
-		            </tr>
-		          </thead>
-		          <tbody>
-		            <tr>
-		              <th><input type="text" name="" placeholder="Parametro" class="form-control" value=""></th>
-		              <th><select class="form-control" name="">
-		                <option value="" disabled selected>Comparador</option>
-		              </select></th>
-		              <th><input type="text" name="" placeholder="Parametro" class="form-control" value=""></th>
-		              <th><button type="button" name="button" class="btn"><i class="fa fa-times" aria-hidden="true" style="margin: 3px 2px 2px 2px;"></i></button></th>
-		            </tr>
-		          </tbody>
-		        </table>
-     		 </div>
-     		 <button type="button" name="button" class="btn btn-primary" style="margin:5px 5px 5px 10px;">Eliminar metodologia</button>
+					<h3>Elimine sus indicadores</h3>
+					<hr>
+			        <table class="table table-striped">
+			          <thead>
+			            <tr class="">
+			              <th class="headerTable">Nombre</th>
+			              <th class="headerTable">Eliminar</th>
+			            </tr>
+			          </thead>
+			          <tbody>
+			         	<c:forEach items="${metodologias}" var="metodologia">								
+				            <tr>
+				              <th><input type="text" name="" placeholder="Nombre" rverclass="form-control" value="<c:out value='${metodologia.getNombre()}'/>" disabled></th>
+				              <th>				              
+				              	<form:form method="get" action="eliminarMetodologia.html">
+				              		<!--  <button type="button" name="removeButton" id="removeButton" onclick="location.href='eliminarIndicador/<c:out value='${indicador.getIdIndicador()}'/>.html'" class="btn deleteButton"><i class="fa fa-times" aria-hidden="true" style="margin: 3px 2px 2px 2px;"></i></button>
+				            		-->
+				            		<button name="removeButton" type="submit" id="removeButton" value="<c:out value='${metodologia.getIdMetodologia()}'/>" class="btn deleteButton"><i class="fa fa-times" aria-hidden="true" style="margin: 3px 2px 2px 2px;"></i></button>
+				            	</form:form>
+				              </th>
+				            </tr>
+			            </c:forEach>
+			          </tbody>
+			        </table>
+				</div>
 			<script>
-			$(document).click(function(){
 				$("#botonCondiciones").click(function(){
 					$("#botonCondiciones").hide();
 					$("#cantidadCondiciones").hide();
@@ -159,7 +152,7 @@
 						var createDiv = document.createElement('div');
 						form.appendChild(createDiv);
 						createDiv.innerHTML = '<input type="text" class="col-sm-2" placeholder="Parametro" name="parametro1" value="" style="height:30px; margin:5px 5px 5px 10px;">'+
-							'<select class="col-sm-2 miComparador" id="cmp{'+i+'}"name="comparador{'+i+'}" style="height:30px; margin:5px 5px 5px 5px;">'+
+							'<select class="col-sm-2 miComparador" id="comparador"name="comparador{'+i+'}" style="height:30px; margin:5px 5px 5px 5px;">'+
 				    	'<option value="" selected disabled>Comparador</option>'+
 				    	'<option value="1">Igual</option>'+
 					    	'<option value="2">Mayor</option>'+
@@ -174,7 +167,6 @@
 
 					}
 				});
-			});
 			</script>
 			<!-- jQuery -->
 			<script src="resources/js/autocompleteIndicador.js"></script>

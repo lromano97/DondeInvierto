@@ -2,7 +2,6 @@
     pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -12,7 +11,7 @@
 		<meta name="author" content="">
 		<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 		<link href="resources/css/web.css" rel="stylesheet">
-		<title>Consultar Indicadores - dondeInvierto</title>
+		<title>Evaluar Metodologias - dondeInvierto</title>
 	</head>
 
 	<body>
@@ -40,20 +39,20 @@
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cuentas<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="consultarCuenta.html">Consultar cuentas</a></li>
+								<li><a href="consultarCuentas.html">Consultar cuentas</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Indicadores<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="consultarIndicador.html">Consultar indicadores</a></li>
+								<li><a href="evaluarIndicadores.html">Evaluar indicadores</a></li>
 								<li><a href="gestionIndicadores.html">Gestión indicadores</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Metodologías<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="consultarMetodologia.html">Consultar metodologías</a></li>
+								<li><a href="evaluarMetodologias.html">Evaluar metodologías</a></li>
 								<li><a href="gestionMetodologias.html">Gestión metodologías</a></li>
 							</ul>
 						</li>
@@ -67,46 +66,54 @@
 		<div class="container theme-showcase" role="main">
 			<c:choose>
 			    <c:when test="${msg == 0}">
-			    	<div class="alert alert-info" role="alert">
-						El resultado de la evaluacion del indicador es .
+			    	<div class="alert alert-success" role="success">
+						<strong>Metodologia superada</strong> La empresa paso satisfactoriamente todas las condiciones de la metodologia.
+					</div>
+			    </c:when>
+			    <c:when test="${msg == 1}">
+			    	<div class="alert alert-danger" role="danger">
+						<strong>Metodologia no superada</strong> La empresa no paso satisfactoriamente las distintas condiciones de la metodologia.
+					</div>
+			    </c:when>
+			    <c:when test="${msg == 2}">
+			    	<div class="alert alert-danger" role="warning">
+						<strong>Advertencia</strong> No se puede calcular por la falta de datos.
 					</div>
 			    </c:when>
 			</c:choose>
 			<!-- DivInfo -->
 			<div class="jumbotron">
-				<h1>Evaluar Indicadores</h1>
-				<p>Aplique alguno de los indicadores creados sobre alguna de las empresas para conocer su valor</p>
+				<h1>Evaluar Metodologias</h1>
+				<p>Aplique alguna de las metodologias creadas sobre alguna de las empresas para saber si la cumple.</p>
 			</div>
 			  <div class="container">
 				<h3>Filtro de evaluacion</h3>
-			    <form:form action="generarConsultaIndicador.html" method="post">
+			    <form:form method="post" action="generarConsultaMetodologia.html">
 			      <div class="form-group-sm row col-sm-4">
 			      
-					<label for="indicador">Indicador</label>
-			        <form:select path="indicador" id="indicador" cssClass="form-control" style="margin:5px 5px 5px 10px;">
-							<form:option value="Todos" label="Todos"/>
-							<c:forEach items="${indicadores}" var="indicador">     
-								<form:option value="${indicador.getNombre()}" label="${indicador.getNombre()}"/>
+			        <label for="metodologia">Metodologia</label>
+			        <form:select path="metodologia" id="metodologia" cssClass="form-control" style="margin:5px 5px 5px 10px;">
+							<c:forEach items="${metodologias}" var="metodologia">     
+								<form:option value="${metodologia.getNombre()}" label="${metodologia.getNombre()}"/>
 							</c:forEach>
 					</form:select>
-					
-			        <label for="empresa">Empresa</label>
+			        
+			       	<label for="empresa">Empresa</label>
 			        <form:select path="empresa" id="empresa" cssClass="form-control" style="margin:5px 5px 5px 10px;">
-							<form:option value="Todos" label="Todos"/>
 							<c:forEach items="${empresas}" var="empresa">     
 								<form:option value="${empresa}" label="${empresa}"/>
 							</c:forEach>
 					</form:select>
 					
-			     	<label for="anio">Año</label>
+			        <label for="anio">Año</label>
 			     	<form:select path="anio" id="año" cssClass="form-control" style="margin:5px 5px 5px 10px;">
-						<form:option value="Todos" label="Todos"/>
 						<c:forEach items="${anios}" var="anio">     
 							<form:option value="${anio}" label="${anio}"/>
 						</c:forEach>
 					</form:select>
 					
-					<button class="btn btn-primary" class="submitIndicador form-control" type="submit" style="margin:5px 5px 5px 10px;">Evaluar</button>
+				  	 <button type="submit" name="button" class="btn btn-primary" style="margin:5px 5px 5px 10px;">Evaluar</button>
+				  
 				  </div>
 			    </form:form>
 			 </div>

@@ -1,7 +1,3 @@
-
-
-
-
 $(document).change(function(){
 	$("select.miComparador").change(function(){
 		var selectedComparador = $(this).val();

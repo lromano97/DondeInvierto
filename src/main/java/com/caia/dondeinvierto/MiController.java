@@ -19,6 +19,7 @@ import org.mongodb.morphia.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,6 +39,7 @@ import com.caia.dondeinvierto.models.Metodologia;
 import com.caia.dondeinvierto.models.PreIndicador;
 import com.caia.dondeinvierto.models.Usuario;
 
+import iceblock.IBlock;
 import iceblock.connection.ConnectionManager;
 
 import com.mongodb.BasicDBObject;
@@ -69,20 +71,17 @@ public class MiController {
 		
 		this.conn = ConnectionManager.getConnection();
 		this.dbCotizacion = DBCotizacion.getInstance();
-		this.dbCotizacion.update();
+		this.dbCotizacion.init();
 		
 		// Conexion a MongoDB
         MongoClient cliente = new MongoClient("localhost", 27017);
-		Datastore ds = new Morphia().createDatastore(cliente, "PreIndicadores");	
+		//Datastore ds = new Morphia().createDatastore(cliente, "PreIndicadores");	
 		db = cliente.getDB("PreIndicadores");
-
-		// PASO 3: Obtenemos una coleccion para trabajar con ella
-		DBCollection collection = db.getCollection("Futbolistas");
 		
 		// Ivan scheduler
-		Timer time = new Timer();		
-		ScheduledTask st = new ScheduledTask();
-		time.schedule(st, 60000, 120000); // Empieza al minuto y se repite cada 2 minutos
+		//Timer time = new Timer();		
+		//ScheduledTask st = new ScheduledTask();
+		//time.schedule(st, 60000, 120000); // Empieza al minuto y se repite cada 2 minutos
 		
 	}
 	
@@ -173,6 +172,7 @@ public class MiController {
 					
 					DBSession dbSession = new DBSession();
 					dbSession.updateIndicadores(usuario.getIdUsuario());
+					dbSession.updateMetodologias(usuario.getIdUsuario());
 					
 					session.setAttribute("usuario", usuario);
 					session.setAttribute("dbSession", dbSession);
@@ -354,7 +354,7 @@ public class MiController {
 			model.addObject("command",new CrearIndicadorForm());	
 			
 			model.addObject("indicadores",dbSession.getIndicadores());	
-			model.addObject("cuentas",dbCotizacion.getCuentas());	
+			model.addObject("cuentas",dbCotizacion.getCuentas());
 			
 		}
 		
@@ -449,9 +449,9 @@ public class MiController {
 		
 	}
 	
-	// Ir a consultar cuenta
-	@RequestMapping(value="consultarCuenta", method={RequestMethod.GET})
-	public ModelAndView irAConsultarCuenta(HttpSession session){
+	// Ir a consultar cuentas
+	@RequestMapping(value="consultarCuentas", method={RequestMethod.GET})
+	public ModelAndView irAConsultarCuentas(HttpSession session){
 		
 		ModelAndView model = new ModelAndView();
 				
@@ -465,7 +465,7 @@ public class MiController {
 			
 			Usuario usuario = (Usuario) session.getAttribute("usuario");
 			
-			model.setViewName("consultarCuenta");
+			model.setViewName("consultarCuentas");
 			model.addObject("usuario",usuario);
 						
 			model.addObject("empresas",dbCotizacion.getEmpresas());
@@ -496,7 +496,7 @@ public class MiController {
 
 			Usuario usuario = (Usuario) session.getAttribute("usuario");
 			
-			model.setViewName("consultarCuenta");
+			model.setViewName("consultarCuentas");
 			model.addObject("command",new FiltroConsultaCuenta());
 			
 			model.addObject("usuario",usuario);
@@ -514,9 +514,9 @@ public class MiController {
 			
 	}
 	
-	// Ir a consultar indicador
-	@RequestMapping(value="consultarIndicador", method={RequestMethod.GET})
-	public ModelAndView irAConsultarIndicador(HttpSession session){
+	// Ir a evaluar indicadores
+	@RequestMapping(value="evaluarIndicadores", method={RequestMethod.GET})
+	public ModelAndView irAEvaluarIndicadores(HttpSession session){
 		
 		ModelAndView model = new ModelAndView();
 				
@@ -531,7 +531,7 @@ public class MiController {
 			Usuario usuario = (Usuario) session.getAttribute("usuario");
 			DBSession dbSession = (DBSession) session.getAttribute("dbSession");
 			
-			model.setViewName("consultarIndicador");
+			model.setViewName("evaluarIndicadores");
 			
 			model.addObject("usuario",usuario);
 			model.addObject("empresas",dbCotizacion.getEmpresas());
@@ -548,7 +548,7 @@ public class MiController {
 	
 	// Generar consulta indicador
 	@RequestMapping(value="generarConsultaIndicador", method=RequestMethod.POST)
-	public ModelAndView generarConsultaIndicador(HttpSession session, FiltroConsultaIndicador filtroConsulta) throws Exception {		
+	public ModelAndView generarConsultaIndicador(HttpSession session, FiltroConsultaIndicador filtroConsulta) {		
 		
 		ModelAndView model = new ModelAndView();
 		
@@ -565,47 +565,85 @@ public class MiController {
 			String nombreIndicador = filtroConsulta.getIndicador();
 			String an = filtroConsulta.getAnio();
 			BasicDBObject query = new BasicDBObject();
-			List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
-			obj.add(new BasicDBObject("indicador", filtroConsulta.getIndicador()));
-			obj.add(new BasicDBObject("empresa", filtroConsulta.getEmpresa()));
-			obj.add(new BasicDBObject("anio", an));
-			obj.add(new BasicDBObject("idUsuario", usuario.getIdUsuario()));
-			query.put("$and", obj);
-			DBObject cursor= collection.findOne(query);
-			if(cursor == null) {	
-				String formula= indicadorAEvaluar.generarFormula(nombreIndicador, Integer.parseInt(an), filtroConsulta.getEmpresa(), dbSession);
-				ScriptEngineManager mgr = new ScriptEngineManager();
-				ScriptEngine engine = mgr.getEngineByName("JavaScript");
-				double valorIndicador = Double.parseDouble(engine.eval(formula).toString());				
-//				double valorIndicador = Double.parseDouble((String) engine.eval(formula));
-				PreIndicador preIndicador=new PreIndicador(nombreIndicador,filtroConsulta.getEmpresa(),Integer.parseInt(an), usuario.getIdUsuario().intValue() ,valorIndicador);
-				collection.insert(preIndicador.toDBObjectPreIndicador());
-			}
-			
-			System.out.println("arafue");
-				System.out.println("atroden");
-				System.out.println(cursor);
-				DBObject cursor2= collection.findOne(query);
-				System.out.println(cursor2);
-//				PreIndicador preIndi = new PreIndicador(cursor); 
-//				System.out.println(preIndi.getValor());
-				
-			
-			
-			
-		
-			//MOSTRAR POR INTERFAZ
-			model.setViewName("consultarIndicador");
-			model.addObject("command", new FiltroConsultaIndicador());
 						
+			query.append("indicador", filtroConsulta.getIndicador());
+			query.append("empresa", filtroConsulta.getEmpresa());
+			query.append("anio",Integer.parseInt(filtroConsulta.getAnio()));
+			query.append("usuario",usuario.getIdUsuario());
+			DBObject cursor= collection.findOne(query);
+			
+			String valorIndicador = null;
+			
+			if(cursor == null) {	
+				
+				try {
+					String formula= indicadorAEvaluar.generarFormula(nombreIndicador, Integer.parseInt(an), filtroConsulta.getEmpresa(), dbSession);
+					ScriptEngineManager mgr = new ScriptEngineManager();
+					ScriptEngine engine = mgr.getEngineByName("JavaScript");
+					valorIndicador = engine.eval(formula).toString();				
+					PreIndicador preIndicador=new PreIndicador(nombreIndicador,filtroConsulta.getEmpresa(),Integer.parseInt(an), usuario.getIdUsuario().intValue() ,valorIndicador);
+					collection.insert(preIndicador.toDBObjectPreIndicador());
+					model.addObject("msg",0);
+					model.addObject("valorIndicador",valorIndicador);
+
+				} catch (Exception e){
+					
+					model.addObject("msg",1);
+					
+				}
+				
+			} else {
+				
+				model.addObject("msg",0);
+				valorIndicador = (String) cursor.get("valor");
+				model.addObject("valorIndicador",valorIndicador);
+				
+			}
+
+			//MOSTRAR POR INTERFAZ
+			model.setViewName("evaluarIndicadores");
+			model.addObject("command", new FiltroConsultaIndicador());
+			model.addObject("empresas", dbCotizacion.getEmpresas());
+			model.addObject("indicadores", dbSession.getIndicadores());
+			model.addObject("anios", dbCotizacion.getAnios());
+
 		}
 		
 		return model;					
 	
 	}
-	// Ir a consultar metodologia
-	@RequestMapping(value="consultarMetodologia", method={RequestMethod.GET})
-	public ModelAndView irAConsultarMetodologia(HttpSession session){
+	
+	// Eliminar indicador
+	@RequestMapping(value="eliminarIndicador")
+	public ModelAndView eliminarIndicador(@RequestParam(value="removeButton") int idIndicador, HttpSession session) throws SQLException {		
+		
+		ModelAndView model = new ModelAndView();
+		
+		if(session.getAttribute("usuario") == null){
+			model.setViewName("login");
+			model.addObject("command",new LoginForm());
+		} else {
+			
+			DBSession dbSession = (DBSession) session.getAttribute("dbSession");
+			
+			model.setViewName("gestionIndicadores");
+			model.addObject("command",new CrearIndicadorForm());	
+			
+			model.addObject("indicadores",dbSession.getIndicadores());	
+			model.addObject("cuentas",dbCotizacion.getCuentas());
+			
+			System.out.println(model.getViewName());
+			dbSession.eliminarIndicador(idIndicador);
+			
+		}
+		
+		return model;					
+	
+	}
+	
+	// Ir a evaluar metodologias
+	@RequestMapping(value="evaluarMetodologias", method={RequestMethod.GET})
+	public ModelAndView irAEvaluarMetodologias(HttpSession session){
 		
 		ModelAndView model = new ModelAndView();
 				
@@ -618,14 +656,65 @@ public class MiController {
 		} else {
 			
 			Usuario usuario = (Usuario) session.getAttribute("usuario");
-				
-			model.setViewName("consultarMetodologia");
+			DBSession dbSession = (DBSession) session.getAttribute("dbSession");
+
+			model.setViewName("evaluarMetodologias");
 			model.addObject("usuario",usuario);
+			model.addObject("metodologias",dbSession.getMetodologias());
+			model.addObject("empresas",dbCotizacion.getEmpresas());
+			model.addObject("anios",dbCotizacion.getAnios());
+
+			model.addObject("command", new FiltroConsultaMetodologia());
 			
 		}
 		
 		return model;
 		
+	}
+	
+	// Generar consulta indicador
+	@RequestMapping(value="generarConsultaMetodologia", method=RequestMethod.POST)
+	public ModelAndView generarConsultaMetodologia(HttpSession session, FiltroConsultaMetodologia filtroConsulta) throws NumberFormatException {		
+		
+		ModelAndView model = new ModelAndView();
+		
+		if(session.getAttribute("usuario") == null){
+			model.setViewName("login");
+			model.addObject("command",new LoginForm());
+		} else {
+			
+			Usuario usuario = (Usuario) session.getAttribute("usuario");
+			DBSession dbSession = (DBSession) session.getAttribute("dbSession");
+			
+			Metodologia met = dbSession.obtenerMetodologia(filtroConsulta.getMetodologia());
+			
+			model.setViewName("evaluarMetodologias");
+			
+			try {
+				System.out.println(filtroConsulta.getEmpresa());
+				System.out.println(filtroConsulta.getAnio());
+				boolean rdo = met.evaluarMetodologia(filtroConsulta.getEmpresa(), Integer.parseInt(filtroConsulta.getAnio()), dbSession, dbCotizacion);
+				
+				if(rdo){
+					model.addObject("msg",0);
+				} else {
+					model.addObject("msg",1);
+				}
+			
+			} catch (Exception e) {
+				model.addObject("msg",2);
+			}
+			
+			model.addObject("usuario",usuario);
+			model.addObject("metodologias",dbSession.getMetodologias());
+			model.addObject("empresas",dbCotizacion.getEmpresas());
+			model.addObject("anios",dbCotizacion.getAnios());
+			model.addObject("command", new FiltroConsultaMetodologia());
+						
+		}
+		
+		return model;
+				
 	}
 	
 	// Ir a gestion de metodologias
@@ -643,16 +732,19 @@ public class MiController {
 		} else {
 			
 			Usuario usuario = (Usuario) session.getAttribute("usuario");
-				
+			DBSession dbSession = (DBSession) session.getAttribute("dbSession");
+
 			model.setViewName("gestionMetodologias");
 			model.addObject("usuario",usuario);
+			model.addObject("command",new GestionIndicadorForm());
+			model.addObject("metodologias",dbSession.getMetodologias());
 			
 		}
 		
 		return model;
 		
 	}
-	
+
 	
 }
 

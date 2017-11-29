@@ -63,13 +63,64 @@ public class DBCotizacion {
 
 	public void addCotizacion(Cotizacion unaCotizacion) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, SQLException{
 		IBlock.insert(ConnectionManager.getConnection(), Cotizacion.class, unaCotizacion);
+		cotizaciones.add(unaCotizacion);
 	}
 	
 	public boolean esVacio(){
 		return cotizaciones.isEmpty();
 	}
+	
+	public void clearAndDelete() throws SQLException{
+		IBlock.delete(ConnectionManager.getConnection(), Cotizacion.class, null);
+		cotizaciones.clear();
+		empresas.clear();
+		cuentas.clear();
+		anios.clear();
+	}
+	
+	public void update(String rowsCSV[]) throws SQLException, NumberFormatException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
+		
+		this.clearAndDelete();
+		
+		String[] values;
+		String empresa;
+		String cuenta;
+		Integer anio;
+		String valor;
+		for(int i=0; i < rowsCSV.length; i++){
+			
+			values = rowsCSV[i].split(",");
+			empresa = values[0];
+			empresa = empresa.replaceAll("\\s+","");
+			
+			if (!this.empresas.contains(empresa)){
+				this.empresas.add(empresa);
+			}
+				
+			cuenta = values[1];
+			cuenta = cuenta.replaceAll("\\s+","");
+			
+			if(!this.cuentas.contains(cuenta)){
+				this.cuentas.add(cuenta);
+			}
+				
+			anio = Integer.parseInt(values[2]);
+			
+			if(!this.anios.contains(anio)){
+				this.anios.add(anio);
+			}
+				
+			valor = values[3];
+			
+			Cotizacion unaCotizacion = new Cotizacion();
+			
+			this.addCotizacion(unaCotizacion.crearCotizacion(empresa, cuenta, anio, Double.parseDouble(valor)));	
+			
+		}
+		
+	}
 
-	public void update() throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, SQLException{
+	public void init() throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, SQLException{
 	
 		cotizaciones.clear();
 		empresas.clear();
