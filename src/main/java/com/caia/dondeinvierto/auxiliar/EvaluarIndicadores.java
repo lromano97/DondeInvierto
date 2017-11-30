@@ -4,6 +4,9 @@ import com.caia.dondeinvierto.models.Cotizacion;
 import com.caia.dondeinvierto.models.DBCotizacion;
 import com.caia.dondeinvierto.models.DBSession;
 import com.caia.dondeinvierto.models.Indicador;
+
+import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.regex.Pattern;
 
 import javax.script.ScriptEngine;
@@ -32,10 +35,10 @@ public class EvaluarIndicadores{
 		return nombreIndicador;
 	}
 
-	public String generarFormula(String nombreIndicador, int anio, String empresa, DBSession dbsession) throws Exception {
+	public String generarFormula(String nombreIndicador, int anio, String empresa, DBSession dbsession) throws NoDataException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, SQLException {
 		Indicador indicadorAEvaluar = dbsession.obtenerIndicador(nombreIndicador);
 		if(indicadorAEvaluar == null) {
-			throw new Exception("El indicador elegido no se encuentra cargado en la base de datos.");
+			throw new NoDataException("El indicador elegido no se encuentra cargado en la base de datos.");
 		}
 		int posicion;
 		for(posicion = 0; posicion < indicadorAEvaluar.getExpresion().length(); posicion++) {
@@ -48,7 +51,7 @@ public class EvaluarIndicadores{
 				String nombreCuenta = obtenerNombre(indicadorAEvaluar.getExpresion(), posicion);
 				Cotizacion cotizacion = DBCotizacion.getInstance().obtenerValorCuenta(empresa, nombreCuenta, anio);
 				if(cotizacion == null) {
-					throw new Exception("La cuenta presente en el indicador no existe en la base de datos.");
+					throw new NoDataException("La cuenta presente en el indicador no existe en la base de datos.");
 				}
 				formula += Double.toString(cotizacion.getValor());
 			}else {

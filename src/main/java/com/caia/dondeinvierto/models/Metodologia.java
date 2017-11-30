@@ -1,13 +1,19 @@
 package com.caia.dondeinvierto.models;
  
-import java.util.ArrayList;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.List;
 
-import org.apache.tools.ant.types.CommandlineJava.SysProperties;
+import javax.script.ScriptException;
 
+import com.caia.dondeinvierto.auxiliar.NoDataException;
+import com.caia.dondeinvierto.forms.FiltroConsultaMetodologia;
+
+import iceblock.IBlock;
 import iceblock.ann.*;
+import iceblock.connection.ConnectionManager;
  
-@Table(name="Metodologia")
+@Table(name="metodologia")
 public class Metodologia{
 	
 	@Id(strategy=Id.ASSIGMENT)
@@ -19,9 +25,6 @@ public class Metodologia{
     
 	@OneToOne(name="id_usuario", fetchType=OneToOne.EAGER)
     private Usuario usuario;
-	
-	@OneToMany(type=Condicion.class, attr="metodologia")
-	private List<Condicion> condiciones;
 
 	public Integer getIdMetodologia() {
 		return idMetodologia;
@@ -31,54 +34,32 @@ public class Metodologia{
 		this.idMetodologia = idMetodologia;
 	}
 
-
-
 	public String getNombre() {
 		return nombre;
 	}
-
-
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 
-
-
 	public Usuario getUsuario() {
 		return usuario;
 	}
-
-
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
 
-
-
-	public List<Condicion> getCondiciones() {
-		return condiciones;
-	}
-
-
-
-	public void setCondiciones(List<Condicion> condiciones) {
-		this.condiciones = condiciones;
-	}
-
-
-
-	public boolean evaluarMetodologia(String empresa, int anio,DBSession dbSession, DBCotizacion dbCotizacion) throws Exception {
-        boolean result = true;
-        System.out.println("hola en evaluar");
-        System.out.println(this.getCondiciones());
-        /*
-        for(Condicion con : this.getCondiciones() ) {
-        	System.out.println("Entre");
-            result = result && con.evaluarCondicion(empresa, anio,dbSession, dbCotizacion);
+	public boolean evaluarMetodologia(FiltroConsultaMetodologia filtroConsulta, DBSession dbSession, DBCotizacion dbCotizacion) throws NoDataException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, SQLException, ScriptException {
+        
+		boolean result = true;
+		List<Condicion> condiciones = IBlock.select(ConnectionManager.getConnection(), Condicion.class, "condicion.id_metodologia=" + this.getIdMetodologia());
+		for(Condicion con : condiciones) {
+            result = result && con.evaluarCondicion(filtroConsulta.getEmpresa(), Integer.parseInt(filtroConsulta.getAnio()), dbSession, dbCotizacion);
         }
-       */
+       
         return result;
+        
     }
+	
 }

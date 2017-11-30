@@ -75,7 +75,6 @@ public class DBSession {
 				i++;
 			}
 		}
-		System.out.println(i);
 		indicadores.remove(i);
 		
 	}

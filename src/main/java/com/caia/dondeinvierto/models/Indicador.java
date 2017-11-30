@@ -1,5 +1,7 @@
 package com.caia.dondeinvierto.models;
 
+import java.util.List;
+
 import iceblock.ann.*;
 
 @Table(name="indicador")
@@ -17,6 +19,9 @@ public class Indicador {
 	
 	@OneToOne(name="id_usuario", fetchType=OneToOne.EAGER)
 	private Usuario usuario;
+	
+	@OneToMany(type=Condicion.class, attr="indicador")
+	private List<Condicion> condiciones ;
 	
 	// Constructor
 	public Indicador crearIndicador(String nombre, String expresion,Usuario usuario){
@@ -59,5 +64,15 @@ public class Indicador {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
+
+	public List<Condicion> getCondiciones() {
+		return condiciones;
+	}
+
+	public void setCondiciones(List<Condicion> condiciones) {
+		this.condiciones = condiciones;
+	}
+	
+	
 	
 }

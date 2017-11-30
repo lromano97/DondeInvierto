@@ -1,81 +1,145 @@
 package com.caia.dondeinvierto.models;
  
+import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 import com.caia.dondeinvierto.auxiliar.EvaluarIndicadores;
+import com.caia.dondeinvierto.auxiliar.NoDataException;
 
-import iceblock.ann.Column;
-import iceblock.ann.Id;
-import iceblock.ann.OneToOne;
- 
-public abstract class Condicion {
+import iceblock.IBlock;
+import iceblock.ann.*;
+import iceblock.connection.ConnectionManager;
+
+@Table(name="condicion")
+public class Condicion {
    
 	@Id(strategy=Id.ASSIGMENT)
 	@Column(name="id_condicion")
 	private Integer idCondicion;
-	
-	@OneToOne(name="id_metodologia", fetchType=OneToOne.EAGER)
-	private Metodologia metodologia;
-	
-	@OneToOne(name="id_indicador", fetchType=OneToOne.EAGER)
-    public Indicador indicador;
 
 	@Column(name="tipo")
 	private Integer tipo;
 	
-	@Column(name="parametro")
-    private double parametro;
+	@Column(name="constante")
+    private Double constante;
 	
-	@OneToOne(name="id_parametro2")
-    public Indicador idParametro2;
+	@Column(name="id_indicador")
+	private Integer idIndicador;
+	
+	@Column(name="id_metodologia")
+	private Integer idMetodologia;
 	
     EvaluarIndicadores evalIndi = new EvaluarIndicadores();
     
-    public boolean evaluarCondicion(String empresa, int anio, DBSession dbSession, DBCotizacion dbCotizacion) throws Exception {
-        
-    	switch(tipo){
-    		case 0:{
-    			System.out.println(indicador.getNombre());
+    
+    
+	public Integer getIdCondicion() {
+		return idCondicion;
+	}
+
+
+
+	public void setIdCondicion(Integer idCondicion) {
+		this.idCondicion = idCondicion;
+	}
+
+
+
+	public Integer getTipo() {
+		return tipo;
+	}
+
+
+
+	public void setTipo(Integer tipo) {
+		this.tipo = tipo;
+	}
+
+
+
+	public Double getConstante() {
+		return constante;
+	}
+
+
+
+	public void setConstante(Double constante) {
+		this.constante = constante;
+	}
+
+
+
+	public Integer getIdIndicador() {
+		return idIndicador;
+	}
+
+
+
+	public void setIdIndicador(Integer idIndicador) {
+		this.idIndicador = idIndicador;
+	}
+
+
+
+	public Integer getIdMetodologia() {
+		return idMetodologia;
+	}
+
+
+
+	public void setIdMetodologia(Integer idMetodologia) {
+		this.idMetodologia = idMetodologia;
+	}
+
+
+
+	public boolean evaluarCondicion(String empresa, int anio, DBSession dbSession, DBCotizacion dbCotizacion) throws NoDataException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, SQLException, ScriptException {
+		
+		Indicador indicador = IBlock.find(ConnectionManager.getConnection(), Indicador.class, this.getIdIndicador());
+		if(indicador == null){
+			throw new NoDataException("Falta indicador");
+		}
+		
+		Double constante = this.getConstante();
+		
+		switch(this.getTipo()){
+		
+    		// Mayor
+			case 0:{
     			String formula= evalIndi.generarFormula(indicador.getNombre(), anio, empresa, dbSession);
     	        ScriptEngineManager mgr = new ScriptEngineManager();
     	        ScriptEngine engine = mgr.getEngineByName("JavaScript");
-    	        double valorIndicador1 = Double.parseDouble(engine.eval(formula).toString());
-    	        if(idParametro2 != null) {
-    	            String formula2= evalIndi.generarFormula(idParametro2.getNombre(), anio, empresa, dbSession);
-    	            double valorIndicador2 = Double.parseDouble(engine.eval(formula2).toString());
-    	            return valorIndicador1 > valorIndicador2;
-    	        }else {
-    	        	System.out.println(parametro);
-    	            return valorIndicador1 > parametro;
-    	        }
+    	        double valorIndicador = Double.parseDouble(engine.eval(formula).toString());
+    	        return valorIndicador > constante;
     		}
+			
+			// Menor
     		case 1:{
     	        String formula= evalIndi.generarFormula(indicador.getNombre(), anio, empresa, dbSession);
     	        ScriptEngineManager mgr = new ScriptEngineManager();
     	        ScriptEngine engine = mgr.getEngineByName("JavaScript");
     	        double valorIndicador1 = Double.parseDouble(engine.eval(formula).toString());
-    	        if(idParametro2 != null) {
-    	            String formula2= evalIndi.generarFormula(idParametro2.getNombre(), anio, empresa, dbSession);
-    	            double valorIndicador2 = Double.parseDouble(engine.eval(formula2).toString());
-    	            return valorIndicador1 < valorIndicador2;
-    	        }else {
-    	            return valorIndicador1 < parametro;
-    	        }
+    	        return valorIndicador1 < constante;
     	    }
+    		
+    		// Igual
     		case 2:{
     			 String formula= evalIndi.generarFormula(indicador.getNombre(), anio, empresa, dbSession);
     			 ScriptEngineManager mgr = new ScriptEngineManager();
     			 ScriptEngine engine = mgr.getEngineByName("JavaScript");
     		     double valorIndicador1 = Double.parseDouble(engine.eval(formula).toString());
-    		        if(idParametro2 != null) {
-    		            String formula2= evalIndi.generarFormula(idParametro2.getNombre(), anio, empresa, dbSession);
-    		            double valorIndicador2 = Double.parseDouble(engine.eval(formula2).toString());
-    		            return valorIndicador1 == valorIndicador2;
-    		        }else {
-    		            return valorIndicador1 == parametro;
-    		        }
+    		     return valorIndicador1 == constante;
     	    }
+    		
+    		default:{
+    			return false;
+    		}
+    		
+    		/*
     		case 3:{
     	        ScriptEngineManager mgr = new ScriptEngineManager();
     	        ScriptEngine engine = mgr.getEngineByName("JavaScript");
@@ -90,13 +154,9 @@ public abstract class Condicion {
     	        }
     	        return true;
     		}
-    			
+    		 */
     	}
-    	
-    	// TODO Auto-generated method stub
-        return false;
+    
     }
-    
-    
    
 }

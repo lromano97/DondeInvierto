@@ -11,6 +11,7 @@ import java.util.Timer;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -26,18 +27,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.caia.dondeinvierto.auxiliar.EvaluarIndicadores;
-import com.caia.dondeinvierto.auxiliar.ParserCSV;
-import com.caia.dondeinvierto.auxiliar.ScheduledTask;
+import com.caia.dondeinvierto.auxiliar.*;
 import com.caia.dondeinvierto.forms.*;
-import com.caia.dondeinvierto.models.Condicion;
-import com.caia.dondeinvierto.models.Cotizacion;
-import com.caia.dondeinvierto.models.DBCotizacion;
-import com.caia.dondeinvierto.models.DBSession;
-import com.caia.dondeinvierto.models.Indicador;
-import com.caia.dondeinvierto.models.Metodologia;
-import com.caia.dondeinvierto.models.PreIndicador;
-import com.caia.dondeinvierto.models.Usuario;
+import com.caia.dondeinvierto.models.*;
 
 import iceblock.IBlock;
 import iceblock.connection.ConnectionManager;
@@ -53,7 +45,6 @@ import com.mongodb.QueryBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
-import org.mongodb.morphia.Datastore;
 
 @Controller
 public class MiController {
@@ -75,7 +66,6 @@ public class MiController {
 		
 		// Conexion a MongoDB
         MongoClient cliente = new MongoClient("localhost", 27017);
-		//Datastore ds = new Morphia().createDatastore(cliente, "PreIndicadores");	
 		db = cliente.getDB("PreIndicadores");
 		
 		// Ivan scheduler
@@ -84,6 +74,8 @@ public class MiController {
 		//time.schedule(st, 60000, 120000); // Empieza al minuto y se repite cada 2 minutos
 		
 	}
+	
+	// LOGIN/LOGOUT
 	
 	// Redirige a formulario login
 	@RequestMapping("init")
@@ -109,29 +101,6 @@ public class MiController {
 		
 	}
 	
-	// Error 404
-	@RequestMapping(value="/404")
-	public ModelAndView error404(HttpSession session){
-		
-		ModelAndView model = new ModelAndView();
-		model.setViewName("error404");
-		
-		return model;
-		
-	}
-	
-	// Error 500
-	@RequestMapping(value="/500")
-	public ModelAndView error500(HttpSession session){
-			
-		ModelAndView model = new ModelAndView();
-		model.setViewName("error500");
-			
-		return model;
-			
-	}
-		
-		
 	// Ir a login
 	@RequestMapping(value="login", method={RequestMethod.GET})
 	public ModelAndView irALogin(HttpSession session){
@@ -212,6 +181,48 @@ public class MiController {
 						
 	}
 	
+	// Logout
+	@RequestMapping(value="logout", method= RequestMethod.GET)
+	public ModelAndView logout(HttpSession session){
+		
+		session.invalidate();
+		
+		ModelAndView model = new ModelAndView();
+		
+		model.setViewName("login");
+		model.addObject("command",new LoginForm());	
+		
+		return model;
+		
+	}
+	
+	// ERROR WEBPAGES
+	
+	// Error 404
+	@RequestMapping(value="/404")
+	public ModelAndView error404(HttpSession session){
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("error404");
+		
+		return model;
+		
+	}
+	
+	// Error 500
+	@RequestMapping(value="/500")
+	public ModelAndView error500(HttpSession session){
+			
+		ModelAndView model = new ModelAndView();
+		model.setViewName("error500");
+			
+		return model;
+			
+	}
+		
+	
+	// INICIO
+	
 	// Ir a inicio
 	@RequestMapping(value="inicio", method={RequestMethod.GET})
 	public ModelAndView irAInicio(HttpSession session){
@@ -238,6 +249,8 @@ public class MiController {
 		return model;
 		
 	}
+	
+	// PROYECTO
 	
 	// Ir a proyecto
 	@RequestMapping(value="proyecto", method={RequestMethod.GET})
@@ -335,8 +348,77 @@ public class MiController {
 		return model;
 		
 	}
+
+	// CUENTAS
 	
-	// Ir a indicadores
+	// Ir a consultar cuentas
+	@RequestMapping(value="consultarCuentas", method={RequestMethod.GET})
+	public ModelAndView irAConsultarCuentas(HttpSession session){
+		
+		ModelAndView model = new ModelAndView();
+				
+		if(session.getAttribute("usuario") == null){
+			
+			model.setViewName("login");
+			model.addObject("msg",1);
+			model.addObject("command",new LoginForm());
+			
+		} else {
+			
+			Usuario usuario = (Usuario) session.getAttribute("usuario");
+			
+			model.setViewName("consultarCuentas");
+			model.addObject("usuario",usuario);
+						
+			model.addObject("empresas",dbCotizacion.getEmpresas());
+			model.addObject("cuentas",dbCotizacion.getCuentas());
+			model.addObject("anios",dbCotizacion.getAnios());
+			
+			ArrayList<Cotizacion> resultados = new ArrayList<Cotizacion>();
+			model.addObject("resultados",resultados);
+			
+			model.addObject("command",new FiltroConsultaCuenta());
+			
+		}
+		
+		return model;
+		
+	}
+	
+	// Generar consulta cuenta 
+	@RequestMapping(value="generarConsultaCuenta", method=RequestMethod.POST)
+	public ModelAndView generarConsultaCuenta(HttpSession session, FiltroConsultaCuenta filtroConsulta) {		
+				
+		ModelAndView model = new ModelAndView();
+			
+		if(session.getAttribute("usuario") == null){
+			model.setViewName("login");
+			model.addObject("command",new LoginForm());
+		} else {
+
+			Usuario usuario = (Usuario) session.getAttribute("usuario");
+			
+			model.setViewName("consultarCuentas");
+			model.addObject("command",new FiltroConsultaCuenta());
+			
+			model.addObject("usuario",usuario);
+						
+			model.addObject("empresas",dbCotizacion.getEmpresas());
+			model.addObject("cuentas",dbCotizacion.getCuentas());
+			model.addObject("anios",dbCotizacion.getAnios());
+			
+			ArrayList<Cotizacion> resultados = dbCotizacion.generarConsultaCuenta(filtroConsulta);
+			model.addObject("resultados", resultados);
+			
+		}
+			
+		return model;
+			
+	}
+	
+	// INDICADORES
+	
+	// Ir a gestion de indicadores
 	@RequestMapping(value="gestionIndicadores", method={RequestMethod.GET})
 	public ModelAndView irAIndicadores(HttpSession session){
 		
@@ -434,86 +516,6 @@ public class MiController {
 		
 	}
 	
-	// Logout
-	@RequestMapping(value="logout", method= RequestMethod.GET)
-	public ModelAndView logout(HttpSession session){
-		
-		session.invalidate();
-		
-		ModelAndView model = new ModelAndView();
-		
-		model.setViewName("login");
-		model.addObject("command",new LoginForm());	
-		
-		return model;
-		
-	}
-	
-	// Ir a consultar cuentas
-	@RequestMapping(value="consultarCuentas", method={RequestMethod.GET})
-	public ModelAndView irAConsultarCuentas(HttpSession session){
-		
-		ModelAndView model = new ModelAndView();
-				
-		if(session.getAttribute("usuario") == null){
-			
-			model.setViewName("login");
-			model.addObject("msg",1);
-			model.addObject("command",new LoginForm());
-			
-		} else {
-			
-			Usuario usuario = (Usuario) session.getAttribute("usuario");
-			
-			model.setViewName("consultarCuentas");
-			model.addObject("usuario",usuario);
-						
-			model.addObject("empresas",dbCotizacion.getEmpresas());
-			model.addObject("cuentas",dbCotizacion.getCuentas());
-			model.addObject("anios",dbCotizacion.getAnios());
-			
-			ArrayList<Cotizacion> resultados = new ArrayList<Cotizacion>();
-			model.addObject("resultados",resultados);
-			
-			model.addObject("command",new FiltroConsultaCuenta());
-			
-		}
-		
-		return model;
-		
-	}
-	
-	// Generar consulta cuenta 
-	@RequestMapping(value="generarConsultaCuenta", method=RequestMethod.POST)
-	public ModelAndView generarConsultaCuenta(HttpSession session, FiltroConsultaCuenta filtroConsulta) {		
-				
-		ModelAndView model = new ModelAndView();
-			
-		if(session.getAttribute("usuario") == null){
-			model.setViewName("login");
-			model.addObject("command",new LoginForm());
-		} else {
-
-			Usuario usuario = (Usuario) session.getAttribute("usuario");
-			
-			model.setViewName("consultarCuentas");
-			model.addObject("command",new FiltroConsultaCuenta());
-			
-			model.addObject("usuario",usuario);
-						
-			model.addObject("empresas",dbCotizacion.getEmpresas());
-			model.addObject("cuentas",dbCotizacion.getCuentas());
-			model.addObject("anios",dbCotizacion.getAnios());
-			
-			ArrayList<Cotizacion> resultados = dbCotizacion.generarConsultaCuenta(filtroConsulta);
-			model.addObject("resultados", resultados);
-			
-		}
-			
-		return model;
-			
-	}
-	
 	// Ir a evaluar indicadores
 	@RequestMapping(value="evaluarIndicadores", method={RequestMethod.GET})
 	public ModelAndView irAEvaluarIndicadores(HttpSession session){
@@ -548,7 +550,7 @@ public class MiController {
 	
 	// Generar consulta indicador
 	@RequestMapping(value="generarConsultaIndicador", method=RequestMethod.POST)
-	public ModelAndView generarConsultaIndicador(HttpSession session, FiltroConsultaIndicador filtroConsulta) {		
+	public ModelAndView generarConsultaIndicador(HttpSession session, FiltroConsultaIndicador filtroConsulta) throws ScriptException, NumberFormatException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, SQLException {		
 		
 		ModelAndView model = new ModelAndView();
 		
@@ -586,7 +588,7 @@ public class MiController {
 					model.addObject("msg",0);
 					model.addObject("valorIndicador",valorIndicador);
 
-				} catch (Exception e){
+				} catch (NoDataException e){
 					
 					model.addObject("msg",1);
 					
@@ -632,7 +634,6 @@ public class MiController {
 			model.addObject("indicadores",dbSession.getIndicadores());	
 			model.addObject("cuentas",dbCotizacion.getCuentas());
 			
-			System.out.println(model.getViewName());
 			dbSession.eliminarIndicador(idIndicador);
 			
 		}
@@ -640,6 +641,8 @@ public class MiController {
 		return model;					
 	
 	}
+	
+	// METODOLOGIAS
 	
 	// Ir a evaluar metodologias
 	@RequestMapping(value="evaluarMetodologias", method={RequestMethod.GET})
@@ -672,9 +675,9 @@ public class MiController {
 		
 	}
 	
-	// Generar consulta indicador
+	// Generar consulta metodologia
 	@RequestMapping(value="generarConsultaMetodologia", method=RequestMethod.POST)
-	public ModelAndView generarConsultaMetodologia(HttpSession session, FiltroConsultaMetodologia filtroConsulta) throws NumberFormatException {		
+	public ModelAndView generarConsultaMetodologia(HttpSession session, FiltroConsultaMetodologia filtroConsulta) throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException, SQLException, ScriptException {		
 		
 		ModelAndView model = new ModelAndView();
 		
@@ -691,9 +694,7 @@ public class MiController {
 			model.setViewName("evaluarMetodologias");
 			
 			try {
-				System.out.println(filtroConsulta.getEmpresa());
-				System.out.println(filtroConsulta.getAnio());
-				boolean rdo = met.evaluarMetodologia(filtroConsulta.getEmpresa(), Integer.parseInt(filtroConsulta.getAnio()), dbSession, dbCotizacion);
+				boolean rdo = met.evaluarMetodologia(filtroConsulta, dbSession, dbCotizacion);
 				
 				if(rdo){
 					model.addObject("msg",0);
@@ -701,7 +702,8 @@ public class MiController {
 					model.addObject("msg",1);
 				}
 			
-			} catch (Exception e) {
+			} catch (NoDataException e) {
+				e.printStackTrace();
 				model.addObject("msg",2);
 			}
 			
@@ -736,7 +738,6 @@ public class MiController {
 
 			model.setViewName("gestionMetodologias");
 			model.addObject("usuario",usuario);
-			model.addObject("command",new GestionIndicadorForm());
 			model.addObject("metodologias",dbSession.getMetodologias());
 			
 		}
